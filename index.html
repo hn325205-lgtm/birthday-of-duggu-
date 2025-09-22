@@ -23,8 +23,9 @@
             height: 300px;
             overflow: hidden;
             border-radius: 15px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.4);
+            box-shadow: 0 0 25px rgba(255,0,100,0.5);
             background: #000;
+            z-index: 5;
         }
         #slideshow .slide {
             position: absolute;
@@ -46,9 +47,8 @@
             margin-top: -20px;
             color: white;
             font-weight: bold;
-            font-size: 25px;
-            border-radius:
-                        3px;
+            font-size: 24px;
+            border-radius: 3px;
             user-select: none;
             background: rgba(0,0,0,0.3);
             z-index: 10;
@@ -58,6 +58,38 @@
         }
         .prev { left: 10px; }
         .next { right: 10px; }
+
+        /* Floating hearts */
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: red;
+            transform: rotate(45deg);
+            opacity: 0.8;
+        }
+        .heart::before, .heart::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: red;
+            border-radius: 50%;
+        }
+        .heart::before { top: -10px; left: 0; }
+        .heart::after { left: 10px; top: 0; }
+        @keyframes floatHeart {
+            0% { transform: translate(0,0) rotate(45deg); opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { transform: translate(0,-600px) rotate(45deg); opacity: 0; }
+        }
+
+        /* Typewriter text gradient */
+        #code .say {
+            background: linear-gradient(90deg, #ff5e62, #ff9966);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
     </style>
     <script>
         function playAudio() {
@@ -86,6 +118,20 @@
             showSlide(current);
             setInterval(nextSlide, 3000);
         }
+
+        // Hearts generator
+        function createHearts(num) {
+            for(let i=0;i<num;i++){
+                let heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.style.left = Math.random()*window.innerWidth + 'px';
+                heart.style.top = Math.random()*window.innerHeight + 'px';
+                heart.style.animation = `floatHeart ${3 + Math.random()*3}s linear forwards`;
+                document.body.appendChild(heart);
+                setTimeout(()=>heart.remove(), 6000);
+            }
+        }
+        setInterval(()=>createHearts(3), 1000);
 
         window.onload = function() {
             startSlideshow();
@@ -159,42 +205,4 @@
                 ]]
             ],
             bloom:{num:700,width:1080,height:650},
-            footer:{width:1200,height:5,speed:10}
-        };
-
-        var tree = new Tree(canvas[0], width, height, opts);
-        var seed = tree.seed, foot = tree.footer, hold = 1;
-
-        canvas.click(function(e){
-            playAudio();
-            var offset = canvas.offset(), x=e.pageX-offset.left, y=e.pageY-offset.top;
-            if(seed.hover(x,y)){ hold=0; canvas.unbind("click"); canvas.unbind("mousemove"); canvas.removeClass('hand'); }
-        }).mousemove(function(e){
-            var offset = canvas.offset(), x=e.pageX-offset.left, y=e.pageY-offset.top;
-            canvas.toggleClass('hand', seed.hover(x,y));
-        });
-
-        var seedAnimate = eval(Jscex.compile("async",function(){
-            seed.draw(); while(hold){$await(Jscex.Async.sleep(10));}
-            while(seed.canScale()){seed.scale(0.95);$await(Jscex.Async.sleep(10));}
-            while(seed.canMove()){seed.move(0,2);foot.draw();$await(Jscex.Async.sleep(10));}
-        }));
-        var growAnimate = eval(Jscex.compile("async",function(){do{tree.grow();$await(Jscex.Async.sleep(10));}while(tree.canGrow());}));
-        var flowAnimate = eval(Jscex.compile("async",function(){do{tree.flower(2);$await(Jscex.Async.sleep(10));}while(tree.canFlower());}));
-        var moveAnimate = eval(Jscex.compile("async",function(){
-            tree.snapshot("p1",240,0,610,680);
-            while(tree.move("p1",500,0)){foot.draw();$await(Jscex.Async.sleep(10));}
-            foot.draw();
-            tree.snapshot("p2",500,0,610,680);
-            canvas.parent().css("background","url("+tree.toDataURL('image/png')+")");
-            canvas.css("background","#ffe"); $await(Jscex.Async.sleep(300)); canvas.css("background","none");
-        }));
-        var textAnimate = eval(Jscex.compile("async",function(){$("#code").show().typewriter();}));
-        var runAsync = eval(Jscex.compile("async",function(){
-            $await(seedAnimate()); $await(growAnimate()); $await(flowAnimate()); $await(moveAnimate()); textAnimate().start();
-        }));
-        runAsync().start();
-    })();
-    </script>
-</body>
-</html>
+            footer:{width:1200,height:5,s
