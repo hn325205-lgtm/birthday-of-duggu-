@@ -1,56 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>HBD Kuku ❤️</title>
 <style>
-    body{margin:0;padding:0;background:#fff;overflow:hidden;font-family:sans-serif;}
-    canvas{position:absolute;top:0;left:0;z-index:1;}
+  body{margin:0;padding:0;background:#fff;overflow:hidden;font-family:sans-serif;}
+  canvas{position:absolute;top:0;left:0;z-index:1;}
 
-    /* Full-size Slideshow */
-    #slideshow{
-        position:absolute;
-        top:0; left:0;
-        width:100vw; height:100vh;
-        overflow:hidden; z-index:2;
-    }
-    #slideshow .slide{
-        position:absolute;
-        width:100%; height:100%;
-        object-fit:cover;
-        opacity:0; transition:opacity 1s;
-    }
-    #slideshow .slide.active{opacity:1;}
-    .prev,.next{
-        cursor:pointer; position:absolute; top:50%;
-        padding:10px; margin-top:-25px; color:white;
-        font-size:36px; background:rgba(0,0,0,0.3);
-        border-radius:5px; user-select:none; z-index:5;
-    }
-    .prev:hover,.next:hover{background:rgba(0,0,0,0.6);}
-    .prev{left:20px;} .next{right:20px;}
+  /* Full-size Slideshow */
+  #slideshow{
+    position:absolute; top:0; left:0;
+    width:100vw; height:100vh;
+    overflow:hidden; z-index:2;
+  }
+  #slideshow .slide{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit:cover;
+    opacity:0; transition:opacity 1s ease;
+  }
+  #slideshow .slide.active{opacity:1;}
+  .prev,.next{
+    cursor:pointer; position:absolute; top:50%;
+    padding:10px; margin-top:-25px; color:white;
+    font-size:36px; background:rgba(0,0,0,0.3);
+    border-radius:5px; user-select:none; z-index:5;
+  }
+  .prev:hover,.next:hover{background:rgba(0,0,0,0.6);}
+  .prev{left:20px;} .next{right:20px;}
 
-    /* Typewriter Text */
-    #message{
-        position:absolute; bottom:50px; left:50%; transform:translateX(-50%);
-        color:#ff2e63; font-size:28px; text-align:center; z-index:6;
-        white-space:pre-wrap;
-        max-width:90%;
-    }
-    .typewriter span{
-        background:linear-gradient(90deg,#ff5e62,#ff9966);
-        -webkit-background-clip:text;
-        -webkit-text-fill-color:transparent;
-    }
+  /* Typewriter Text */
+  #message{
+    position:absolute; bottom:50px; left:50%; transform:translateX(-50%);
+    color:#ff2e63; font-size:28px; text-align:center; z-index:6;
+    white-space:pre-wrap; max-width:90%;
+  }
+  .typewriter span{
+    background:linear-gradient(90deg,#ff5e62,#ff9966);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
 
-    /* Floating hearts */
-    .heart{position:absolute;width:20px;height:20px;background:red;transform:rotate(45deg);opacity:0.8;z-index:7;}
-    .heart::before,.heart::after{content:"";position:absolute;width:20px;height:20px;background:red;border-radius:50%;}
-    .heart::before{top:-10px;left:0;} .heart::after{left:10px;top:0;}
-    @keyframes floatHeart{0%{transform:translate(0,0) rotate(45deg);opacity:0.8;}50%{opacity:1;}100%{transform:translate(0,-600px) rotate(45deg);opacity:0;}}
-    
-    /* Audio button */
-    #audioBtn{position:absolute; top:20px; left:20px; z-index:10; padding:12px 20px; background:#ff5e62; color:white; border:none; cursor:pointer; border-radius:8px; font-size:18px;}
+  /* Floating hearts */
+  .heart{position:absolute;width:20px;height:20px;background:red;transform:rotate(45deg);opacity:0.8;z-index:7;}
+  .heart::before,.heart::after{content:"";position:absolute;width:20px;height:20px;background:red;border-radius:50%;}
+  .heart::before{top:-10px;left:0;} .heart::after{left:10px;top:0;}
+  @keyframes floatHeart{
+    0%{transform:translate(0,0) rotate(45deg);opacity:0.8;}
+    50%{opacity:1;}
+    100%{transform:translate(0,-600px) rotate(45deg);opacity:0;}
+  }
+
+  /* Audio button */
+  #audioBtn{
+    position:absolute; top:20px; left:20px; z-index:10;
+    padding:12px 20px; background:#ff5e62; color:white; border:none;
+    cursor:pointer; border-radius:8px; font-size:18px;
+  }
+
+  /* Mobile safe tap hint */
+  #tapHint{
+    position:absolute; top:20px; right:20px; z-index:10;
+    padding:10px 14px; background:rgba(0,0,0,0.4); color:#fff; border-radius:6px;
+    font-size:14px;
+  }
 </style>
 </head>
 <body>
@@ -59,21 +73,192 @@
 
 <!-- Slideshow -->
 <div id="slideshow">
-    <span class="prev" onclick="prevSlide()">&#10094;</span>
-    <span class="next" onclick="nextSlide()">&#10095;</span>
-    <img src="pics/pic1.jpg" class="slide active">
-    <img src="pics/pic2.jpg" class="slide">
-    <img src="pics/pic3.jpg" class="slide">
-    <img src="pics/pic4.jpg" class="slide">
-    <img src="pics/pic5.jpg" class="slide">
-    <img src="pics/pic6.jpg" class="slide">
+  <span class="prev" aria-label="Previous">&#10094;</span>
+  <span class="next" aria-label="Next">&#10095;</span>
+  <img src="pic1.jpg" class="slide active" alt="Slide 1">
+  <img src="pic2.jpg" class="slide" alt="Slide 2">
+  <img src="pic3.jpg" class="slide" alt="Slide 3">
+  <img src="pic4.jpg" class="slide" alt="Slide 4">
+  <img src="pic5.jpg" class="slide" alt="Slide 5">
+  <img src="pic6.jpg" class="slide" alt="Slide 6">
 </div>
 
 <!-- Typewriter Message -->
 <div id="message" class="typewriter"></div>
 
 <!-- Audio -->
-<audio id="myAudio" loop>
-    <source src="aud.mp3" type="audio/mp3">
+<audio id="myAudio" preload="auto" loop>
+  <source src="aud.mp3" type="audio/mpeg">
 </audio>
-<button id="audioBtn
+<button id="audioBtn" aria-pressed="false">Play music</button>
+<div id="tapHint">Tap play if muted</div>
+
+<script>
+/* ------- Slideshow ------- */
+(function(){
+  const slides = Array.from(document.querySelectorAll('#slideshow .slide'));
+  const prevBtn = document.querySelector('.prev');
+  const nextBtn = document.querySelector('.next');
+  let idx = 0;
+  let autoTimer = null;
+  const AUTO_MS = 4000;
+
+  function show(i){
+    slides[idx].classList.remove('active');
+    idx = (i + slides.length) % slides.length;
+    slides[idx].classList.add('active');
+  }
+
+  function next(){ show(idx + 1); pauseThenAuto(); }
+  function prev(){ show(idx - 1); pauseThenAuto(); }
+
+  function startAuto(){
+    stopAuto();
+    autoTimer = setInterval(()=> show(idx + 1), AUTO_MS);
+  }
+  function stopAuto(){
+    if (autoTimer){ clearInterval(autoTimer); autoTimer = null; }
+  }
+  function pauseThenAuto(){
+    stopAuto();
+    setTimeout(startAuto, 6000);
+  }
+
+  nextBtn.addEventListener('click', next);
+  prevBtn.addEventListener('click', prev);
+
+  // Keyboard arrows
+  window.addEventListener('keydown', (e)=>{
+    if (e.key === 'ArrowRight') next();
+    else if (e.key === 'ArrowLeft') prev();
+  });
+
+  // Start
+  startAuto();
+})();
+
+/* ------- Typewriter ------- */
+(function(){
+  const el = document.getElementById('message');
+  const lines = [
+    "Happy Birthday, Kuku! ❤️",
+    "Each photo is a memory,",
+    "and every moment with you is magic.",
+    "Wishing you smiles, surprises, and endless love today."
+  ];
+  const colored = s => `<span>${s}</span>`;
+  const seq = lines.map(colored);
+  const speed = 35;    // ms per char
+  const hold  = 1600;  // ms before next line
+
+  let iLine = 0, iChar = 0;
+
+  function typeLine(){
+    if (iLine >= seq.length) return;
+    const html = seq[iLine];
+    // Strip tags for typing count but render progressively
+    const textOnly = html.replace(/<[^>]+>/g,'');
+    const visible = textOnly.slice(0, iChar);
+    // Re-wrap visible into the colored span
+    el.innerHTML = `<span>${visible}</span>`;
+    if (iChar < textOnly.length){
+      iChar++;
+      setTimeout(typeLine, speed);
+    } else {
+      iLine++; iChar = 0;
+      setTimeout(typeLine, hold);
+    }
+  }
+  typeLine();
+})();
+  
+/* ------- Floating Hearts ------- */
+(function(){
+  function spawnHeart(){
+    const h = document.createElement('div');
+    h.className = 'heart';
+    const size = 12 + Math.random()*18;
+    h.style.width = size+'px';
+    h.style.height = size+'px';
+    h.style.left = (Math.random()*100)+'vw';
+    h.style.bottom = '-30px';
+    h.style.animation = `floatHeart ${4 + Math.random()*4}s linear forwards`;
+    document.body.appendChild(h);
+    setTimeout(()=> h.remove(), 9000);
+  }
+  setInterval(spawnHeart, 600);
+})();
+
+/* ------- Canvas Confetti-like Background ------- */
+(function(){
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  let w = canvas.width = innerWidth;
+  let h = canvas.height = innerHeight;
+  addEventListener('resize', ()=>{ w = canvas.width = innerWidth; h = canvas.height = innerHeight; });
+
+  const colors = ['#ff5e62','#ff9966','#ffd56b','#6cf1ff','#d06bff'];
+  const dots = Array.from({length: 90}, ()=> makeDot());
+
+  function makeDot(){
+    return {
+      x: Math.random()*w,
+      y: Math.random()*h,
+      r: 1 + Math.random()*2.2,
+      vx: -0.4 + Math.random()*0.8,
+      vy: -0.4 + Math.random()*0.8,
+      c: colors[Math.floor(Math.random()*colors.length)],
+      a: 0.15 + Math.random()*0.25
+    };
+  }
+
+  function tick(){
+    ctx.clearRect(0,0,w,h);
+    for (const d of dots){
+      d.x += d.vx; d.y += d.vy;
+      if (d.x < 0) d.x = w; else if (d.x > w) d.x = 0;
+      if (d.y < 0) d.y = h; else if (d.y > h) d.y = 0;
+      ctx.beginPath(); ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+      ctx.fillStyle = d.c; ctx.globalAlpha = d.a; ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+/* ------- Audio Control (mobile-safe) ------- */
+(function(){
+  const audio = document.getElementById('myAudio');
+  const btn = document.getElementById('audioBtn');
+  const hint = document.getElementById('tapHint');
+
+  function setBtn(playing){
+    btn.textContent = playing ? 'Pause music' : 'Play music';
+    btn.setAttribute('aria-pressed', playing ? 'true' : 'false');
+    hint.style.display = playing ? 'none' : 'block';
+  }
+
+  btn.addEventListener('click', async ()=>{
+    try{
+      if (audio.paused){ await audio.play(); setBtn(true); }
+      else { audio.pause(); setBtn(false); }
+    }catch(e){
+      // If autoplay policy blocks, show hint
+      setBtn(false);
+    }
+  });
+
+  // Try to begin after first user interaction anywhere
+  const prime = async ()=>{
+    try{ await audio.play(); setBtn(true); }
+    catch(e){ /* ignore */ }
+    removeEventListener('pointerdown', prime);
+    removeEventListener('keydown', prime);
+  };
+  addEventListener('pointerdown', prime, {once:true});
+  addEventListener('keydown', prime, {once:true});
+})();
+</script>
+</body>
+</html>
