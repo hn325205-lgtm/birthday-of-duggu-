@@ -1,205 +1,79 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>HBD Kuku ❤️</title>
-    <link type="text/css" rel="stylesheet" href="./file/default.css">
-    <script type="text/javascript" src="./file/jquery.min.js"></script>
-    <script type="text/javascript" src="./file/jscex.min.js"></script>
-    <script type="text/javascript" src="./file/jscex-parser.js"></script>
-    <script type="text/javascript" src="./file/jscex-jit.js"></script>
-    <script type="text/javascript" src="./file/jscex-builderbase.min.js"></script>
-    <script type="text/javascript" src="./file/jscex-async.min.js"></script>
-    <script type="text/javascript" src="./file/jscex-async-powerpack.min.js"></script>
-    <script type="text/javascript" src="./file/functions.js" charset="utf-8"></script>
-    <script type="text/javascript" src="./file/love.js" charset="utf-8"></script>
-    <style>
-        /* Slideshow CSS */
-        #slideshow {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 300px;
-            height: 300px;
-            overflow: hidden;
-            border-radius: 15px;
-            box-shadow: 0 0 25px rgba(255,0,100,0.5);
-            background: #000;
-            z-index: 5;
-        }
-        #slideshow .slide {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 1s;
-        }
-        #slideshow .slide.active {
-            opacity: 1;
-        }
-        /* Arrows */
-        .prev, .next {
-            cursor: pointer;
-            position: absolute;
-            top: 50%;
-            width: auto;
-            padding: 8px;
-            margin-top: -20px;
-            color: white;
-            font-weight: bold;
-            font-size: 24px;
-            border-radius: 3px;
-            user-select: none;
-            background: rgba(0,0,0,0.3);
-            z-index: 10;
-        }
-        .prev:hover, .next:hover {
-            background: rgba(0,0,0,0.6);
-        }
-        .prev { left: 10px; }
-        .next { right: 10px; }
+<meta charset="UTF-8">
+<title>HBD Kuku ❤️</title>
+<style>
+    body{margin:0;padding:0;background:#fff;overflow:hidden;font-family:sans-serif;}
+    canvas{position:absolute;top:0;left:0;z-index:1;}
 
-        /* Floating hearts */
-        .heart {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: red;
-            transform: rotate(45deg);
-            opacity: 0.8;
-        }
-        .heart::before, .heart::after {
-            content: "";
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: red;
-            border-radius: 50%;
-        }
-        .heart::before { top: -10px; left: 0; }
-        .heart::after { left: 10px; top: 0; }
-        @keyframes floatHeart {
-            0% { transform: translate(0,0) rotate(45deg); opacity: 0.8; }
-            50% { opacity: 1; }
-            100% { transform: translate(0,-600px) rotate(45deg); opacity: 0; }
-        }
+    /* Full-size Slideshow */
+    #slideshow{
+        position:absolute;
+        top:0; left:0;
+        width:100vw; height:100vh;
+        overflow:hidden; z-index:2;
+    }
+    #slideshow .slide{
+        position:absolute;
+        width:100%; height:100%;
+        object-fit:cover;
+        opacity:0; transition:opacity 1s;
+    }
+    #slideshow .slide.active{opacity:1;}
+    .prev,.next{
+        cursor:pointer; position:absolute; top:50%;
+        padding:10px; margin-top:-25px; color:white;
+        font-size:36px; background:rgba(0,0,0,0.3);
+        border-radius:5px; user-select:none; z-index:5;
+    }
+    .prev:hover,.next:hover{background:rgba(0,0,0,0.6);}
+    .prev{left:20px;} .next{right:20px;}
 
-        /* Typewriter text gradient */
-        #code .say {
-            background: linear-gradient(90deg, #ff5e62, #ff9966);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-    </style>
-    <script>
-        function playAudio() {
-            var audio = document.getElementById("myAudio");
-            audio.play();
-        }
+    /* Typewriter Text */
+    #message{
+        position:absolute; bottom:50px; left:50%; transform:translateX(-50%);
+        color:#ff2e63; font-size:28px; text-align:center; z-index:6;
+        white-space:pre-wrap;
+        max-width:90%;
+    }
+    .typewriter span{
+        background:linear-gradient(90deg,#ff5e62,#ff9966);
+        -webkit-background-clip:text;
+        -webkit-text-fill-color:transparent;
+    }
 
-        // Slideshow JS
-        let slides, current = 0;
-        function showSlide(index) {
-            slides.forEach((slide, i) => {
-                slide.classList.remove('active');
-                if(i === index) slide.classList.add('active');
-            });
-        }
-        function nextSlide() {
-            current = (current + 1) % slides.length;
-            showSlide(current);
-        }
-        function prevSlide() {
-            current = (current - 1 + slides.length) % slides.length;
-            showSlide(current);
-        }
-        function startSlideshow() {
-            slides = document.querySelectorAll('#slideshow .slide');
-            showSlide(current);
-            setInterval(nextSlide, 3000);
-        }
-
-        // Hearts generator
-        function createHearts(num) {
-            for(let i=0;i<num;i++){
-                let heart = document.createElement('div');
-                heart.className = 'heart';
-                heart.style.left = Math.random()*window.innerWidth + 'px';
-                heart.style.top = Math.random()*window.innerHeight + 'px';
-                heart.style.animation = `floatHeart ${3 + Math.random()*3}s linear forwards`;
-                document.body.appendChild(heart);
-                setTimeout(()=>heart.remove(), 6000);
-            }
-        }
-        setInterval(()=>createHearts(3), 1000);
-
-        window.onload = function() {
-            startSlideshow();
-        }
-    </script>
+    /* Floating hearts */
+    .heart{position:absolute;width:20px;height:20px;background:red;transform:rotate(45deg);opacity:0.8;z-index:7;}
+    .heart::before,.heart::after{content:"";position:absolute;width:20px;height:20px;background:red;border-radius:50%;}
+    .heart::before{top:-10px;left:0;} .heart::after{left:10px;top:0;}
+    @keyframes floatHeart{0%{transform:translate(0,0) rotate(45deg);opacity:0.8;}50%{opacity:1;}100%{transform:translate(0,-600px) rotate(45deg);opacity:0;}}
+    
+    /* Audio button */
+    #audioBtn{position:absolute; top:20px; left:20px; z-index:10; padding:12px 20px; background:#ff5e62; color:white; border:none; cursor:pointer; border-radius:8px; font-size:18px;}
+</style>
 </head>
 <body>
-    <div id="main">
-        <div id="error"><a href="http://www.google.cn/chrome/intl/zh-CN/landing_chrome.html?hl=zh-CN&brand=CHMI">Chrome</a> (<a href="http://firefox.com.cn/download/">Firefox</a>)</div>
-        <audio autoplay="autoplay" height="100" width="100" id="myAudio">
-            <source src="aud.mp3" type="audio/mp3" />
-            <embed height="100" width="100" src="aud.mp3" />
-        </audio>
 
-        <!-- Slideshow container -->
-        <div id="slideshow">
-            <span class="prev" onclick="prevSlide()">&#10094;</span>
-            <span class="next" onclick="nextSlide()">&#10095;</span>
-            <img src="pic1.jpg" class="slide" />
-            <img src="pic2.jpg" class="slide" />
-            <img src="pic3.jpg" class="slide" />
-            <img src="pic4.jpg" class="slide" />
-            <img src="pic5.jpg" class="slide" />
-            <img src="pic6.jpg" class="slide" />
-        </div>
+<canvas id="canvas"></canvas>
 
-        <div id="wrap">
-            <div id="text">
-                <div id="code" style="display:none;">
-                    <span class="say">Happiest Birthday my jaanu janeman 🎉</span><br>
-                    <span class="say">This day is so special for me because the best thing ever came to the earth – that's you ❤️</span><br>
-                    <span class="say">I can’t say everything in words, but my feelings for you are very genuine</span><br>
-                    <span class="say">You know how much I love youuuu 💞</span><br>
-                    <span class="say">One thing I want to say – small fights may happen sometimes,</span><br>
-                    <span class="say">but my feelings for you will never change 💕</span><br>
-                    <span class="say">And please take care of yourself, not just for you, but for me too 😘</span><br>
-                </div>
-            
-            <canvas id="canvas" width="1100" height="680"></canvas>
-        </div>
-    </div>
+<!-- Slideshow -->
+<div id="slideshow">
+    <span class="prev" onclick="prevSlide()">&#10094;</span>
+    <span class="next" onclick="nextSlide()">&#10095;</span>
+    <img src="pics/pic1.jpg" class="slide active">
+    <img src="pics/pic2.jpg" class="slide">
+    <img src="pics/pic3.jpg" class="slide">
+    <img src="pics/pic4.jpg" class="slide">
+    <img src="pics/pic5.jpg" class="slide">
+    <img src="pics/pic6.jpg" class="slide">
+</div>
 
-    <script>
-    (function() {
-        var canvas = $('#canvas');
-        if (!canvas[0].getContext) { $("#error").show(); return false; }
-        var width = canvas.width(), height = canvas.height();
-        canvas.attr("width", width); canvas.attr("height", height);
+<!-- Typewriter Message -->
+<div id="message" class="typewriter"></div>
 
-        var opts = {
-            seed: { x: width/2-20, color:"rgb(190,26,37)", scale:2 },
-            branch: [
-                [535,680,570,250,500,200,30,100,[
-                    [540,500,455,417,340,400,13,100,[
-                        [450,435,434,430,394,395,2,40]
-                    ]],
-                    [550,445,600,356,680,345,12,100,[
-                        [578,400,648,409,661,426,3,80]
-                    ]],
-                    [539,281,537,248,534,217,3,40],
-                    [546,397,413,247,328,244,9,80,[
-                        [427,286,383,253,371,205,2,40],
-                        [498,345,435,315,395,330,4,60]
-                    ]],
-                    [546,357,608,252,678,221,6,100,[
-                        [590,293,646,277,648,271,2,80]
-                    ]]
-                ]]
-            ],
-            bloom:{num:700,width:1080,height:650},
-            footer:{width:1200,height:5,s
+<!-- Audio -->
+<audio id="myAudio" loop>
+    <source src="aud.mp3" type="audio/mp3">
+</audio>
+<button id="audioBtn
