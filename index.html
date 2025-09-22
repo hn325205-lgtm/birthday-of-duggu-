@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Happiest birthday moti ❤️</title>
+<title>Happiest Birthday moti ❤️</title>
 <style>
   :root{
     --bg:#0e0e10; --text:#fff; --accent:#ff5e62; --accent2:#ffd56b;
@@ -45,7 +45,7 @@
   #audioBtn{padding: clamp(8px, 2.6vw, 10px) clamp(12px, 4vw, 16px); font-size: clamp(13px, 3.6vw, 15px); background:var(--accent); color:#fff; border:none; border-radius:10px; cursor:pointer;}
   #tapHint{display:inline-block; font-size: clamp(11px, 3.2vw, 12px); padding:6px 10px; border-radius:9px; background:rgba(0,0,0,.35)}
 
-  /* Flow: mobile-first order: Quiz -> Quiz2 -> Message -> Journey gallery */
+  /* Flow: mobile-first order: Quiz1 -> Quiz2 -> Message -> Gallery */
   .main{position:absolute; inset:56px 0 0 0; display:grid; grid-auto-rows: minmax(0, auto); grid-template-rows: auto auto auto 1fr;}
   @media (min-width: 900px){
     .main{grid-template-columns: 0.95fr 1.05fr; grid-template-rows: 1fr 1fr; gap:0;}
@@ -57,8 +57,11 @@
   .section{position:relative; min-height:0; border-bottom:1px solid rgba(255,255,255,0.16)}
   .section:last-child{border-bottom:none}
 
-  /* Balloons top on gallery */
-  .balloons{position:absolute; top:10px; left:0; right:0; display:flex; justify-content:center; gap: clamp(10px, 6vw, 30px); z-index:2; opacity:0.92; pointer-events:none}
+  /* Make visual layers click-through */
+  .balloons, .cakeBox, #bgCanvas, #confettiCanvas { pointer-events: none; }
+
+  /* Balloons on gallery */
+  .balloons{position:absolute; top:10px; left:0; right:0; display:flex; justify-content:center; gap: clamp(10px, 6vw, 30px); z-index:2; opacity:0.92}
   .balloon{width: clamp(46px, 18vw, 90px); animation: floatY 5.5s ease-in-out infinite; filter: drop-shadow(0 6px 8px rgba(0,0,0,.25))}
   .balloon:nth-child(2){animation-delay: .8s} .balloon:nth-child(3){animation-delay: 1.5s}
   @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
@@ -94,16 +97,16 @@
 
   /* Gallery */
   .galleryWrap{position:relative; height: min(58vh, 520px)}
-  #slideshow{position:absolute; inset:0; overflow:hidden; opacity:.0; pointer-events:none; transition:opacity .7s ease}
-  #slideshow.show{opacity:1; pointer-events:auto}
+  #slideshow{position:absolute; inset:0; overflow:hidden; opacity:.0; pointer-events:none; transition:opacity .7s ease; z-index:3}
+  #slideshow.show{opacity:1; pointer-events:auto; z-index:5}
   #slideshow .slide{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; opacity:0; transition:opacity 1s ease}
   #slideshow .slide.active{opacity:1}
-  .prev,.next{cursor:pointer; position:absolute; top:50%; transform:translateY(-50%); padding:8px 10px; color:white; font-size: clamp(26px, 6.5vw, 34px); background:rgba(0,0,0,0.35); border-radius:10px; user-select:none; z-index:2;}
+  .prev,.next{cursor:pointer; position:absolute; top:50%; transform:translateY(-50%); padding:8px 10px; color:white; font-size: clamp(26px, 6.5vw, 34px); background:rgba(0,0,0,0.35); border-radius:10px; user-select:none; z-index:6;}
   .prev{left:10px} .next{right:10px}
   .prev:hover,.next:hover{background:rgba(0,0,0,0.55)}
 
   /* Cake */
-  .cakeBox{position:absolute; bottom:8px; left:50%; transform:translateX(-50%); z-index:3}
+  .cakeBox{position:absolute; bottom:8px; left:50%; transform:translateX(-50%); z-index:2}
   .cake{width: clamp(140px, 52vw, 220px); height: clamp(120px, 38vw, 180px); position:relative}
   .layer{width:100%; height:33%; background: #e3a953; border-radius: 10px; position:absolute; left:0; box-shadow: inset 0 -8px 0 rgba(255,255,255,0.15)}
   .layer.bottom{bottom:0}
@@ -128,7 +131,7 @@
 <div class="wrap">
   <div class="card">
     <div class="bar">
-      <div class="title">HAPPIEST BIRTHDAY BABY ❤️</div>
+      <div class="title">HBD Kuku ❤️</div>
       <div class="actions">
         <button id="audioBtn" aria-pressed="false">Play music</button>
         <span id="tapHint">Tap play if muted</span>
@@ -181,7 +184,7 @@
         </div>
       </section>
 
-      <!-- Personal message first on mobile -->
+      <!-- Personal message -->
       <section class="section message">
         <div class="note">
           <strong>Personal message:</strong>
@@ -304,7 +307,7 @@
   next.addEventListener('click', ()=>{
     const val = getValue(step);
     if(!val) { scoreBox.textContent = 'Please pick an option 😊'; return; }
-    if(val==='c' || val==='b') score++; // playful scoring
+    if(val==='c' || val==='b') score++;
     step++; showStep(step); scoreBox.textContent='';
   });
 
@@ -314,16 +317,20 @@
     if(val==='c' || val==='b') score++;
     scoreBox.textContent = 'Score: '+score+'/'+cards.length+' — perfect for a birthday star! 💫';
     shootConfettiBurst();
-    // reveal gallery after brief pause
-    setTimeout(()=> document.getElementById('slideshow').classList.add('show'), 700);
+    setTimeout(()=>{
+      document.getElementById('slideshow').classList.add('show');
+      // Fully hide quizzes so they don't intercept clicks
+      document.getElementById('quiz1').style.display = 'none';
+      document.getElementById('quiz2').style.display = 'none';
+    }, 700);
   });
 })();
 
-/* Typewriter + personalized lines */
+/* Typewriter */
 (function(){
   const el = document.getElementById('message');
   const lines = [
-    "Happy Birthday, KAKUL 🥰😘🤌! ❤️",
+    "Happy Birthday, Kuku! ❤️",
     "Aaj tumhari khushi sabse important hai.",
     "Har yaad me thoda sa jadoo hai.",
     "Chalo, journey dekhte hain..."
@@ -349,16 +356,27 @@
   const prevBtn = document.querySelector('#slideshow .prev');
   const nextBtn = document.querySelector('#slideshow .next');
   let idx=0, timer=null, AUTO=4200;
-  function show(i){ slides[idx].classList.remove('active'); idx=(i+slides.length)%slides.length; slides[idx].classList.add('active'); }
+
+  function show(i){
+    slides[idx].classList.remove('active');
+    idx=(i+slides.length)%slides.length;
+    slides[idx].classList.add('active');
+  }
   function next(){ show(idx+1); pauseAuto(); }
   function prev(){ show(idx-1); pauseAuto(); }
   function startAuto(){ stopAuto(); timer=setInterval(()=>show(idx+1), AUTO); }
   function stopAuto(){ if(timer){ clearInterval(timer); timer=null; } }
   function pauseAuto(){ stopAuto(); setTimeout(startAuto, 6000); }
-  prevBtn.addEventListener('click', prev); nextBtn.addEventListener('click', next);
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
   window.addEventListener('keydown', e=>{ if(e.key==='ArrowRight') next(); if(e.key==='ArrowLeft') prev(); });
-  // Start when slideshow becomes visible
-  const obs=new MutationObserver(()=>{ if(document.getElementById('slideshow').classList.contains('show')){ startAuto(); obs.disconnect(); }});
+
+  const obs=new MutationObserver(()=>{
+    if(document.getElementById('slideshow').classList.contains('show')){
+      startAuto(); obs.disconnect();
+    }
+  });
   obs.observe(document.getElementById('slideshow'), {attributes:true});
 })();
 
@@ -372,8 +390,4 @@ function stepConfetti(){
   cctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
   for(const p of confettiPieces){
     p.y += p.vy; p.x += p.vx; p.r += 0.05;
-    if(p.y > confettiCanvas.height + 40) p.y = -20;
-    if(p.x < -20) p.x = confettiCanvas.width + 20;
-    if(p.x > confettiCanvas.width + 20) p.x = -20;
-    cctx.save(); cctx.translate(p.x,p.y); cctx.rotate(p.r);
-    cctx.fillS
+    if(p.y > confettiCa
