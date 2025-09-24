@@ -77,20 +77,8 @@
   .no.running{position:absolute}
   .seal{font-size: clamp(11px, 3.4vw, 13px); opacity:0.85}
   .success{display:none; flex-direction:column; align-items:center; gap:6px}
-  .success.show{display:flex}
-
-  /* Quiz 2 */
-  .quiz2{padding: clamp(14px, 5vw, 28px); display:none}
-  .quiz2.show{display:block} /* FIX: reveal when .show is added */
-  .qcard{background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.22); border-radius:16px; padding: clamp(12px, 4vw, 16px); margin-top:10px}
-  .qtitle{font-weight:700; margin:0 0 8px; font-size: clamp(16px, 4.8vw, 18px)}
-  .opts{display:grid; gap:10px; margin-top:8px}
-  .opt{display:flex; align-items:center; gap:10px; background:rgba(255,255,255,0.06); padding:10px 12px; border-radius:12px; cursor:pointer; border:1px solid rgba(255,255,255,0.12)}
-  .opt input{accent-color: var(--accent)}
-  .qnav{display:flex; gap:10px; margin-top:12px}
-  .btn{padding:10px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.22); background:rgba(255,255,255,0.08); color:#fff; cursor:pointer}
-  .score{margin-top:10px; font-size: clamp(14px, 4.4vw, 16px)}
-
+  .success.show{display:flex
+                
   /* Personal message */
   .note{padding: clamp(14px, 4vw, 18px); margin: clamp(8px, 3vw, 14px); border-radius:16px; background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.22); font-size: clamp(14px, 4.4vw, 16px); line-height:1.6}
   #message{margin: clamp(10px, 4vw, 16px); font-size: clamp(16px, 4.8vw, 20px)}
@@ -150,19 +138,9 @@
           </div>
         </div>
       </section>
-
-      <section class="section quiz2">
-        <div class="quiz2" id="quiz2">
-          <div class="qcard" data-q="0">
-            <p class="qtitle">Birthday treat sabse pehle kya? 🎂</p>
-            <div class="opts">
-              <label class="opt"><input type="radio" name="q0" value="a"> Cake ka first bite</label>
-              <label class="opt"><input type="radio" name="q0" value="b"> Ek tight hug</label>
-              <label class="opt"><input type="radio" name="q0" value="c"> Dono ek sath 😜</label>
-            </div>
+      
           </div>
-
-          <div class="qcard" data-q="1" style="display:none">
+           <div class="qcard" data-q="1" style="display:none">
             <p class="qtitle">Perfect plan for today? ✨</p>
             <div class="opts">
               <label class="opt"><input type="radio" name="q1" value="a"> Photos + surprises</label>
