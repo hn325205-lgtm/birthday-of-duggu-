@@ -6,23 +6,13 @@
 <title>Happiest Birthday moti 💗</title>
 <style>
   :root{
-    /* Pink theme */
-    --bg:#0d0a0d;
-    --text:#fff;
-    --accent:#ff3b81;         /* primary pink */
-    --accent2:#ff7bb3;        /* light pink */
-    --accent3:#ffc1d9;        /* pale pink */
-    --glass: rgba(255,255,255,0.10);
-    --glass-border: rgba(255,255,255,0.28);
+    --bg:#0d0a0d; --text:#fff; --accent:#ff3b81; --accent2:#ff7bb3; --accent3:#ffc1d9;
+    --glass: rgba(255,255,255,0.10); --glass-border: rgba(255,255,255,0.28);
   }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0; color:var(--text); background:#0b080c; overflow:hidden;
-    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
-  }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0; color:var(--text); background:#0b080c; overflow:hidden; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;}
 
-  /* Background mesh (pink) + particles */
+  /* Background mesh */
   .mesh{
     position:fixed; inset:0; z-index:0;
     background:
@@ -31,13 +21,12 @@
       radial-gradient(55vmax 55vmax at 50% 100%, rgba(255,193,217,0.30), transparent 60%),
       linear-gradient(180deg, #140e14, #120d12 40%, #0f0a10);
     animation:hue 18s ease-in-out infinite alternate; filter:saturate(118%);
-    pointer-events:none; /* decorative only */
+    pointer-events:none; /* clicks pass-through */ /* FIX */
   }
   @keyframes hue{to{filter:hue-rotate(6deg) saturate(130%)}}
-  canvas.bg,canvas.confetti{position:fixed; inset:0; pointer-events:none}
+  canvas.bg,canvas.confetti{position:fixed; inset:0; pointer-events:none} /* FIX */
   canvas.bg{z-index:1} canvas.confetti{z-index:10}
 
-  /* App frame */
   .wrap{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:5; padding: clamp(10px, 4vw, 28px);}
   .card{
     width:min(980px,100%); height:min(92vh, 780px); background:var(--glass);
@@ -47,24 +36,18 @@
     overflow:hidden; position:relative;
   }
 
-  /* Header */
   .bar{
     position:absolute; top:0; left:0; right:0; height:56px; display:flex; align-items:center; justify-content:space-between;
     padding:0 clamp(10px,3vw,16px);
     background:linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
     border-bottom:1px solid rgba(255,255,255,0.22);
-    z-index:6; /* keep above content for taps */
+    z-index:6;
   }
   .title{font-weight:700; letter-spacing:.2px; font-size: clamp(16px, 3.8vw, 20px);}
   .actions{display:flex; gap: clamp(6px,2vw,10px)}
-  #audioBtn{
-    padding: clamp(8px, 2.6vw, 10px) clamp(12px, 4vw, 16px);
-    font-size: clamp(13px, 3.6vw, 15px); background:var(--accent); color:#fff;
-    border:none; border-radius:10px; cursor:pointer;
-  }
+  #audioBtn{padding: clamp(8px, 2.6vw, 10px) clamp(12px, 4vw, 16px); font-size: clamp(13px, 3.6vw, 15px); background:var(--accent); color:#fff; border:none; border-radius:10px; cursor:pointer}
   #tapHint{display:inline-block; font-size: clamp(11px, 3.2vw, 12px); padding:6px 10px; border-radius:9px; background:rgba(0,0,0,.35)}
 
-  /* Layout */
   .main{position:absolute; inset:56px 0 0 0; display:grid; grid-auto-rows: minmax(0, auto); grid-template-rows: auto auto auto 1fr;}
   @media (min-width: 900px){
     .main{grid-template-columns: 0.95fr 1.05fr; grid-template-rows: 1fr 1fr; gap:0;}
@@ -76,16 +59,12 @@
   .section{position:relative; min-height:0; border-bottom:1px solid rgba(255,255,255,0.16)}
   .section:last-child{border-bottom:none}
 
-  /* Make visual layers click-through (critical for Yes button) */
-  .mesh, #bgCanvas, #confettiCanvas { pointer-events: none; }
+  /* Reinforce: decorative layers click-through */
+  .mesh, #bgCanvas, #confettiCanvas { pointer-events: none; } /* FIX */
 
-  /* Quiz 1: Yes-only gate */
+  /* Quiz 1 */
   .quiz{position:relative; display:flex; flex-direction:column; align-items:center; text-align:center; padding: clamp(14px, 5vw, 28px); gap: clamp(12px, 3vw, 18px);}
-  .quiz h2{
-    margin:6px 0 0; font-size: clamp(22px, 6.6vw, 32px);
-    background: linear-gradient(90deg, #fff, var(--accent2), var(--accent));
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-  }
+  .quiz h2{margin:6px 0 0; font-size: clamp(22px, 6.6vw, 32px); background: linear-gradient(90deg, #fff, var(--accent2), var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
   .q{font-size: clamp(15px, 4.8vw, 18px); opacity:0.95}
   .btns{display:flex; gap: clamp(10px, 4vw, 16px); margin-top:6px; position:relative}
   .yes,.no{
@@ -102,7 +81,7 @@
 
   /* Quiz 2 */
   .quiz2{padding: clamp(14px, 5vw, 28px); display:none}
-  .quiz2.show{display:block}
+  .quiz2.show{display:block} /* FIX: reveal when .show is added */
   .qcard{background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.22); border-radius:16px; padding: clamp(12px, 4vw, 16px); margin-top:10px}
   .qtitle{font-weight:700; margin:0 0 8px; font-size: clamp(16px, 4.8vw, 18px)}
   .opts{display:grid; gap:10px; margin-top:8px}
@@ -115,30 +94,26 @@
   /* Personal message */
   .note{padding: clamp(14px, 4vw, 18px); margin: clamp(8px, 3vw, 14px); border-radius:16px; background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.22); font-size: clamp(14px, 4.4vw, 16px); line-height:1.6}
   #message{margin: clamp(10px, 4vw, 16px); font-size: clamp(16px, 4.8vw, 20px)}
-  .typewriter span{
-    background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3));
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-  }
+  .typewriter span{background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
 
   /* Gallery */
   .galleryWrap{position:relative; height: min(58vh, 520px)}
   #slideshow{
     position:absolute; inset:0; overflow:hidden; opacity:.0; transition:opacity .7s ease; z-index:5;
-    pointer-events:none; /* hidden state should not capture */
+    pointer-events:none; /* disable until visible */ /* FIX */
   }
-  #slideshow.show{opacity:1; pointer-events:auto;}
+  #slideshow.show{opacity:1; pointer-events:auto} /* FIX */
   #slideshow .slide{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; opacity:0; transition:opacity 1s ease}
   #slideshow .slide.active{opacity:1}
   .prev,.next{
     cursor:pointer; position:absolute; top:50%; transform:translateY(-50%);
     padding:8px 10px; color:white; font-size: clamp(26px, 6.5vw, 34px);
     background:rgba(0,0,0,0.35); border-radius:10px; user-select:none; z-index:6;
-    min-width:44px; min-height:44px; /* mobile tap target */
+    min-width:44px; min-height:44px;
   }
   .prev{left:10px} .next{right:10px}
   .prev:hover,.next:hover{background:rgba(0,0,0,0.55)}
 
-  /* Hearts */
   .heart{position:absolute;width:18px;height:18px;background:#ff3b81;transform:rotate(45deg);opacity:0.85;z-index:4}
   .heart::before,.heart::after{content:"";position:absolute;width:18px;height:18px;background:#ff3b81;border-radius:50%}
   .heart::before{top:-9px;left:0} .heart::after{left:9px;top:0}
@@ -161,7 +136,6 @@
     </div>
 
     <div class="main">
-      <!-- Quiz 1: Yes-only -->
       <section class="section quiz1">
         <div class="quiz" id="quiz1">
           <h2>Quick quiz for you ✨</h2>
@@ -177,7 +151,6 @@
         </div>
       </section>
 
-      <!-- Quiz 2: Birthday quiz -->
       <section class="section quiz2">
         <div class="quiz2" id="quiz2">
           <div class="qcard" data-q="0">
@@ -206,7 +179,6 @@
         </div>
       </section>
 
-      <!-- Personal message -->
       <section class="section message">
         <div class="note">
           <strong>Personal message:</strong>
@@ -217,10 +189,9 @@
         <div id="message" class="typewriter"></div>
       </section>
 
-      <!-- Journey Gallery -->
       <section class="section gallery">
         <div class="galleryWrap">
-          <div id="slideshow" aria-label="Slideshow">
+          <div id="slideshow" aria-label="Slideshow" inert aria-hidden="true"> <!-- start inert -->
             <span class="prev" aria-label="Previous">&#10094;</span>
             <span class="next" aria-label="Next">&#10095;</span>
             <img src="pic1.jpg" class="slide active" alt="Slide 1">
@@ -234,7 +205,6 @@
       </section>
     </div>
 
-    <!-- Audio -->
     <audio id="myAudio" preload="auto" loop>
       <source src="aud.mp3" type="audio/mpeg">
     </audio>
@@ -243,7 +213,7 @@
 </div>
 
 <script>
-/* Particles (lightweight) — decorative only */
+/* Particles */
 (function(){
   const canvas = document.getElementById('bgCanvas'), ctx = canvas.getContext('2d');
   let w,h; function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; }
@@ -263,7 +233,7 @@
   } tick();
 })();
 
-/* Confetti (burst) — lightweight canvas */
+/* Confetti */
 (function(){
   const canvas = document.getElementById('confettiCanvas');
   const ctx = canvas.getContext('2d');
@@ -274,43 +244,23 @@
   function burst(x=w/2, y=h/3){
     const count = 80;
     for(let i=0;i<count;i++){
-      pieces.push({
-        x, y,
-        vx:(Math.random()*2-1)*4,
-        vy:(Math.random()*-2-2)*3,
-        g:0.12+Math.random()*0.08,
-        s:3+Math.random()*3,
-        a:1,
-        c:['#ff3b81','#ff7bb3','#ffc1d9','#fff'][(Math.random()*4)|0],
-        r:Math.random()*Math.PI
-      });
+      pieces.push({ x, y, vx:(Math.random()*2-1)*4, vy:(Math.random()*-2-2)*3, g:0.12+Math.random()*0.08, s:3+Math.random()*3, a:1, c:['#ff3b81','#ff7bb3','#ffc1d9','#fff'][(Math.random()*4)|0], r:Math.random()*Math.PI });
     }
   }
   function tick(){
     ctx.clearRect(0,0,w,h);
     pieces = pieces.filter(p=>p.a>0 && p.y < h+20);
     for(const p of pieces){
-      p.vy += p.g;
-      p.x += p.vx;
-      p.y += p.vy;
-      p.r += 0.1;
-      p.a -= 0.01 + Math.random()*0.01;
-      ctx.save();
-      ctx.globalAlpha = Math.max(0,p.a);
-      ctx.translate(p.x,p.y);
-      ctx.rotate(p.r);
-      ctx.fillStyle = p.c;
-      ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*1.4);
-      ctx.restore();
+      p.vy += p.g; p.x += p.vx; p.y += p.vy; p.r += 0.1; p.a -= 0.01 + Math.random()*0.01;
+      ctx.save(); ctx.globalAlpha = Math.max(0,p.a); ctx.translate(p.x,p.y); ctx.rotate(p.r); ctx.fillStyle = p.c; ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*1.4); ctx.restore();
     }
     requestAnimationFrame(tick);
   }
   tick();
-
   window.shootConfettiBurst = () => burst();
 })();
 
-/* Quiz 1: Only-Yes — ensure overlays don't block */
+/* Quiz 1 */
 (function(){
   const quiz = document.getElementById('quiz1');
   const yes = document.getElementById('yesBtn');
@@ -333,11 +283,11 @@
   yes.addEventListener('click', ()=>{
     succ.classList.add('show');
     shootConfettiBurst();
-    setTimeout(()=> { q2.classList.add('show'); }, 600);
-  });
+    setTimeout(()=> { q2.classList.add('show'); }, 600); /* .quiz2.show => display:block */
+  }, {passive:true});
 })();
 
-/* Quiz 2: Birthday quiz */
+/* Quiz 2 */
 (function(){
   const q2 = document.getElementById('quiz2');
   const cards = Array.from(q2.querySelectorAll('.qcard'));
@@ -363,7 +313,7 @@
     if(!val) { scoreBox.textContent = 'Please pick an option 😊'; return; }
     if(val==='c' || val==='b') score++;
     step++; showStep(step); scoreBox.textContent='';
-  });
+  }, {passive:true});
 
   finish.addEventListener('click', ()=>{
     const val = getValue(step);
@@ -373,15 +323,15 @@
     shootConfettiBurst();
     setTimeout(()=>{
       const ss = document.getElementById('slideshow');
-      ss.classList.add('show');   // enables pointer-events:auto
-      // Fully hide quizzes so they don't intercept
+      ss.classList.add('show');   // enable pointer-events
       const q1 = document.getElementById('quiz1');
       const q2c = document.getElementById('quiz2');
       q1.style.display = 'none'; q2c.style.display = 'none';
-      q1.setAttribute('inert',''); q2c.setAttribute('inert','');
+      q1.setAttribute('inert',''); q2c.setAttribute('inert','');   // prevent hidden capture
       q1.setAttribute('aria-hidden','true'); q2c.setAttribute('aria-hidden','true');
+      ss.removeAttribute('inert'); ss.removeAttribute('aria-hidden');
     }, 700);
-  });
+  }, {passive:true});
 })();
 
 /* Typewriter */
@@ -389,17 +339,15 @@
   const el = document.getElementById('message');
   const lines = [
     "Happy Birthday, Kuku! 💗",
-    "Aankho ki chamak palko ki shan ho tum", 
+    "Aankho ki chamak palko ki shan ho tum",
     "Chehre hi hasi lamho ki muskan ho tum",
-    "Dhadakta hai dil bas tumhari arzu mai", 
+    "Dhadakta hai dil bas tumhari arzu mai",
     "Fir kaise na kahu, Meri jaan ho tum",
   ];
-  const span = s => `<span>${s}</span>`;
-  const seq = lines.map(span);
   const speed=34, hold=1400;
   let iLine=0, iChar=0;
   function typeLine(){
-    if(iLine>=seq.length) return;
+    if(iLine>=lines.length) return;
     const text = lines[iLine];
     const visible = text.slice(0,iChar);
     el.innerHTML = `<span>${visible}</span>`;
@@ -427,8 +375,8 @@
   function stopAuto(){ if(timer){ clearInterval(timer); timer=null; } }
   function pauseAuto(){ stopAuto(); startAuto(); }
 
-  prevBtn.addEventListener('click', prev);
-  nextBtn.addEventListener('click', next);
+  prevBtn.addEventListener('click', prev, {passive:true});
+  nextBtn.addEventListener('click', next, {passive:true});
   startAuto();
 })();
 
@@ -445,10 +393,11 @@
     hint.style.display = playing ? 'none' : 'inline-block';
   }
 
-  btn.addEventListener('click', async ()=>{
+  async function toggle(){
     try{
       if(!playing){
-        await audio.play();
+        const p = audio.play();
+        if (p && typeof p.then === 'function') await p; /* handle promise */
         playing = true;
       }else{
         audio.pause();
@@ -460,7 +409,10 @@
     }finally{
       updateUI();
     }
-  }, {passive:true});
+  }
+
+  btn.addEventListener('click', toggle, {passive:true});
+  btn.addEventListener('pointerup', ()=>{ if(!playing) toggle(); }, {passive:true});
 
   audio.muted = false;
   audio.loop = true;
