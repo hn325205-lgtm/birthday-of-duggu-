@@ -1,158 +1,420 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>HBD Kuku 💗</title>
-<style>
-  :root{
-    --bg:#120d12; --text:#fff;
-    --accent:#ff3b81; --accent2:#ffb86b;
-  }
-  body,html{margin:0;padding:0;height:100%;background:var(--bg);color:var(--text);font-family:sans-serif;overflow:hidden;}
-  .overlay{position:fixed;inset:0;display:flex;justify-content:center;align-items:center;background:#000;z-index:20;}
-  .overlay button{padding:1em 2em;font-size:1.2em;border:none;border-radius:12px;background:var(--accent);color:#fff;cursor:pointer;}
-  section{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1em;overflow:auto;}
-  section.show{display:flex;}
-  h1,h2{margin:0.5em 0;}
-  button{cursor:pointer;}
-  .quiz button{margin:0.5em;padding:0.7em 1.4em;font-size:1em;border:none;border-radius:10px;}
-  .yes{background:var(--accent);color:#fff;}
-  .no{background:#444;color:#fff;}
-  .success{display:none;font-size:1.5em;margin-top:1em;color:var(--accent2);}
-  .success.show{display:block;}
+<!DOCTYPE html>  <html lang="en">  
+<head>  
+<meta charset="UTF-8" />  
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />  
+<title>Happiest Birthday moti 💗</title>  
+<style>  
+  :root{  
+    /* Pink theme */  
+    --bg:#0d0a0d;  
+    --text:#fff;  
+    --accent:#ff3b81;         /* primary pink */  
+    --accent2:#ff7bb3;        /* light pink */  
+    --accent3:#ffc1d9;        /* pale pink */  
+    --glass: rgba(255,255,255,0.10);  
+    --glass-border: rgba(255,255,255,0.28);  
+  }  *{box-sizing:border-box}
+html,body{height:100%}
+body{
+margin:0; color:var(--text); background:#0b080c; overflow:hidden;
+font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+}
 
-  /* Slideshow */
-  #slideshow{position:absolute;inset:0;background:#000;display:none;align-items:center;justify-content:center;flex-direction:column;}
-  #slideshow.show{display:flex;}
-  .slides{position:relative;width:90%;max-width:500px;height:70%;overflow:hidden;border-radius:20px;box-shadow:0 0 20px rgba(0,0,0,0.7);}
-  .slide{position:absolute;inset:0;opacity:0;transition:opacity 1s;}
-  .slide.active{opacity:1;}
-  .slide img{width:100%;height:100%;object-fit:cover;}
-  .controls{margin-top:1em;}
-  .controls button{margin:0 0.5em;padding:0.5em 1.2em;border:none;border-radius:10px;background:var(--accent);color:#fff;}
+/* Background mesh (pink) + particles /
+.mesh{
+position:fixed; inset:0; z-index:0;
+background:
+radial-gradient(50vmax 50vmax at 10% 20%, rgba(255,59,129,0.35), transparent 60%),
+radial-gradient(45vmax 45vmax at 90% 10%, rgba(255,123,179,0.28), transparent 60%),
+radial-gradient(55vmax 55vmax at 50% 100%, rgba(255,193,217,0.30), transparent 60%),
+linear-gradient(180deg, #140e14, #120d12 40%, #0f0a10);
+animation:hue 18s ease-in-out infinite alternate; filter:saturate(118%);
+pointer-events:none; / decorative only */
+}
+@keyframes hue{to{filter:hue-rotate(6deg) saturate(130%)}}
+canvas.bg,canvas.confetti{position:fixed; inset:0; pointer-events:none}
+canvas.bg{z-index:1} canvas.confetti{z-index:10}
 
-  /* Decorative balloons & cake - hidden by default */
-  .balloons, .cakeBox{display:none;position:fixed;inset:0;pointer-events:none;z-index:-1;}
-  .balloons{display:none;justify-content:center;align-items:flex-end;gap:2em;padding-bottom:2em;}
-  .balloon{width:60px;height:80px;border-radius:50% 50% 50% 50%;background:var(--accent);animation:float 6s infinite;}
-  @keyframes float{0%{transform:translateY(100%);}100%{transform:translateY(-120vh);}}
-  .cakeBox{bottom:0;display:none;justify-content:center;align-items:flex-end;pointer-events:none;}
-  .cake{width:160px;height:120px;background:var(--accent2);border-radius:0 0 20px 20px;position:relative;}
-  .layer{position:absolute;top:20px;left:0;width:100%;height:20px;background:#fff;border-radius:10px;}
-  .candle{position:absolute;top:-40px;left:50%;width:12px;height:40px;background:#fff;transform:translateX(-50%);}
-  .flame{position:absolute;top:-20px;left:50%;width:20px;height:20px;background:var(--accent);border-radius:50%;transform:translateX(-50%);}
+/* App frame */
+.wrap{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:5; padding: clamp(10px, 4vw, 28px);}
+.card{
+width:min(980px,100%); height:min(92vh, 780px); background:var(--glass);
+border:1px solid var(--glass-border); border-radius: clamp(14px, 3vw, 24px);
+backdrop-filter: blur(14px) saturate(120%); -webkit-backdrop-filter: blur(14px) saturate(120%);
+box-shadow: 0 10px 30px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.08);
+overflow:hidden; position:relative;
+}
+
+/* Header /
+.bar{
+position:absolute; top:0; left:0; right:0; height:56px; display:flex; align-items:center; justify-content:space-between;
+padding:0 clamp(10px,3vw,16px);
+background:linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
+border-bottom:1px solid rgba(255,255,255,0.22);
+z-index:6; / keep above content for taps */
+}
+.title{font-weight:700; letter-spacing:.2px; font-size: clamp(16px, 3.8vw, 20px);}
+.actions{display:flex; gap: clamp(6px,2vw,10px)}
+#audioBtn{
+padding: clamp(8px, 2.6vw, 10px) clamp(12px, 4vw, 16px);
+font-size: clamp(13px, 3.6vw, 15px); background:var(--accent); color:#fff;
+border:none; border-radius:10px; cursor:pointer;
+}
+#tapHint{display:inline-block; font-size: clamp(11px, 3.2vw, 12px); padding:6px 10px; border-radius:9px; background:rgba(0,0,0,.35)}
+
+/* Layout */
+.main{position:absolute; inset:56px 0 0 0; display:grid; grid-auto-rows: minmax(0, auto); grid-template-rows: auto auto auto 1fr;}
+@media (min-width: 900px){
+.main{grid-template-columns: 0.95fr 1.05fr; grid-template-rows: 1fr 1fr; gap:0;}
+.section.quiz1{grid-column:1 / span 2; grid-row:1}
+.section.quiz2{grid-column:1; grid-row:2}
+.section.message{grid-column:1; grid-row:2}
+.section.gallery{grid-column:2; grid-row:1 / span 2}
+}
+.section{position:relative; min-height:0; border-bottom:1px solid rgba(255,255,255,0.16)}
+.section:last-child{border-bottom:none}
+
+/* Make visual layers click-through (critical for Yes button) */
+.mesh, .balloons, .cakeBox, #bgCanvas, #confettiCanvas { pointer-events: none; }
+
+/* Balloons moved behind slideshow controls to avoid intercepting taps */
+.balloons{
+position:absolute; top:10px; left:0; right:0; display:flex; justify-content:center;
+gap: clamp(10px, 6vw, 30px); z-index:2; opacity:0.92;
+pointer-events:none;
+}
+.balloon{width: clamp(46px, 18vw, 90px); animation: floatY 5.5s ease-in-out infinite; filter: drop-shadow(0 6px 8px rgba(0,0,0,.25))}
+.balloon:nth-child(2){animation-delay: .8s} .balloon:nth-child(3){animation-delay: 1.5s}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+/* Quiz 1: Yes-only gate */
+.quiz{position:relative; display:flex; flex-direction:column; align-items:center; text-align:center; padding: clamp(14px, 5vw, 28px); gap: clamp(12px, 3vw, 18px);}
+.quiz h2{
+margin:6px 0 0; font-size: clamp(22px, 6.6vw, 32px);
+background: linear-gradient(90deg, #fff, var(--accent2), var(--accent));
+-webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.q{font-size: clamp(15px, 4.8vw, 18px); opacity:0.95}
+.btns{display:flex; gap: clamp(10px, 4vw, 16px); margin-top:6px; position:relative}
+.yes,.no{
+padding: clamp(10px, 3.8vw, 12px) clamp(14px, 6vw, 18px); border-radius:14px;
+border:1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.10); color:#fff;
+font-size: clamp(14px, 4.2vw, 16px); cursor:pointer; transition: transform .15s ease, background .2s ease, box-shadow .2s ease;
+box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+.yes:hover{transform:translateY(-1px); background:rgba(255,59,129,0.35); box-shadow:0 10px 24px rgba(255,59,129,0.25)}
+.no.running{position:absolute}
+.seal{font-size: clamp(11px, 3.4vw, 13px); opacity:0.85}
+.success{display:none; flex-direction:column; align-items:center; gap:6px}
+.success.show{display:flex}
+
+/* Quiz 2 */
+.quiz2{padding: clamp(14px, 5vw, 28px); display:none}
+.quiz2.show{display:block}
+.qcard{background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.22); border-radius:16px; padding: clamp(12px, 4vw, 16px); margin-top:10px}
+.qtitle{font-weight:700; margin:0 0 8px; font-size: clamp(16px, 4.8vw, 18px)}
+.opts{display:grid; gap:10px; margin-top:8px}
+.opt{display:flex; align-items:center; gap:10px; background:rgba(255,255,255,0.06); padding:10px 12px; border-radius:12px; cursor:pointer; border:1px solid rgba(255,255,255,0.12)}
+.opt input{accent-color: var(--accent)}
+.qnav{display:flex; gap:10px; margin-top:12px}
+.btn{padding:10px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.22); background:rgba(255,255,255,0.08); color:#fff; cursor:pointer}
+.score{margin-top:10px; font-size: clamp(14px, 4.4vw, 16px)}
+
+/* Personal message */
+.note{padding: clamp(14px, 4vw, 18px); margin: clamp(8px, 3vw, 14px); border-radius:16px; background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.22); font-size: clamp(14px, 4.4vw, 16px); line-height:1.6}
+#message{margin: clamp(10px, 4vw, 16px); font-size: clamp(16px, 4.8vw, 20px)}
+.typewriter span{
+background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3));
+-webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+
+/* Gallery /
+.galleryWrap{position:relative; height: min(58vh, 520px)}
+#slideshow{
+position:absolute; inset:0; overflow:hidden; opacity:.0; transition:opacity .7s ease; z-index:5;
+pointer-events:none; / hidden state should not capture /
+}
+#slideshow.show{opacity:1; pointer-events:auto;}
+#slideshow .slide{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; opacity:0; transition:opacity 1s ease}
+#slideshow .slide.active{opacity:1}
+.prev,.next{
+cursor:pointer; position:absolute; top:50%; transform:translateY(-50%);
+padding:8px 10px; color:white; font-size: clamp(26px, 6.5vw, 34px);
+background:rgba(0,0,0,0.35); border-radius:10px; user-select:none; z-index:6;
+min-width:44px; min-height:44px; / mobile tap target */
+}
+.prev{left:10px} .next{right:10px}
+.prev:hover,.next:hover{background:rgba(0,0,0,0.55)}
+
+/* Cake moved lower in stacking and made click-through */
+.cakeBox{position:absolute; bottom:8px; left:50%; transform:translateX(-50%); z-index:2; pointer-events:none;}
+.cake{width: clamp(140px, 52vw, 220px); height: clamp(120px, 38vw, 180px); position:relative}
+.layer{width:100%; height:33%; background: #ff7bb3; border-radius: 10px; position:absolute; left:0; box-shadow: inset 0 -8px 0 rgba(255,255,255,0.15)}
+.layer.bottom{bottom:0}
+.layer.middle{bottom:33%; transform: scale(.88); left:6%}
+.layer.top{bottom:66%; transform: scale(.76); left:12%}
+.candle{position:absolute; bottom: calc(66% + 18px); left:50%; transform:translateX(-50%); width: clamp(10px, 3vw, 14px); height: clamp(38px, 12vw, 48px); background: repeating-linear-gradient(45deg, #ff3b81 0, #ff3b81 6px, #ffc1d9 6px, #ffc1d9 12px); border-radius: 6px}
+.flame{position:absolute; top:-18px; left:50%; transform: translateX(-50%); width: clamp(10px, 3vw, 14px); height: clamp(16px, 5vw, 20px); background: radial-gradient(ellipse at center, #ffd1e6 0%, #ff3b81 70%, rgba(255,59,129,0.4) 100%); border-radius: 50%; animation: flicker .22s infinite alternate; filter: blur(.3px)}
+@keyframes flicker{from{transform:translateX(-50%) scale(1)} to{transform:translateX(-50%) scale(1.07)}}
+
+/* Hearts */
+.heart{position:absolute;width:18px;height:18px;background:#ff3b81;transform:rotate(45deg);opacity:0.85;z-index:4}
+.heart::before,.heart::after{content:"";position:absolute;width:18px;height:18px;background:#ff3b81;border-radius:50%}
+.heart::before{top:-9px;left:0} .heart::after{left:9px;top:0}
+@keyframes floatHeart{0%{transform:translate(0,0) rotate(45deg);opacity:.9}50%{opacity:1}100%{transform:translate(0,-520px) rotate(45deg);opacity:0}}
 </style>
-</head>
-<body>
 
-<!-- Overlay: Play Music -->
-<div class="overlay" id="overlay">
-  <button id="playBtn">Play Music 🎵</button>
-</div>
+</head>  
+<body>  
+<div class="mesh"></div>  
+<canvas id="bgCanvas" class="bg"></canvas>  
+<canvas id="confettiCanvas" class="confetti"></canvas>  <div class="wrap">  
+  <div class="card">  
+    <div class="bar">  
+      <div class="title">Happiest birthday Moti 💗</div>  
+      <div class="actions">  
+        <button id="audioBtn" aria-pressed="false">Play music</button>  
+        <span id="tapHint">Tap play if muted</span>  
+      </div>  
+    </div>  <div class="main">  
+  <!-- Quiz 1: Yes-only -->  
+  <section class="section quiz1">  
+    <div class="quiz" id="quiz1">  
+      <h2>Quick quiz for you ✨</h2>  
+      <div class="q">Kya tumhe mujhse <span style="color:#ffc1d9">pyaar</span> hai? 😉</div>  
+      <div class="btns">  
+        <button class="yes" id="yesBtn">Yes, always! 💖</button>  
+        <button class="no" id="noBtn" aria-disabled="true">No</button>  
+      </div>  
+      <div class="seal">No select hi nahi hoga… destiny says only “Yes” 😄</div>  
+      <div class="success" id="success1">  
+        <p>Yay! Ab ek chhota birthday quiz… phir journey gallery! 🎉</p>  
+      </div>  
+    </div>  
+  </section>  
 
-<!-- Quiz 1 -->
-<section id="quiz1" class="quiz">
-  <h1>Happy Birthday Kuku 💖</h1>
-  <h2>Do you want a surprise?</h2>
-  <div>
-    <button class="yes" id="yesBtn">Yes 🎉</button>
-    <button class="no">No 🙃</button>
-  </div>
-  <div class="success" id="successMsg">Yay! Here we go... 🎂🎈</div>
-</section>
+  <!-- Quiz 2: Birthday quiz -->  
+  <section class="section quiz2">  
+    <div class="quiz2" id="quiz2">  
+      <div class="qcard" data-q="0">  
+        <p class="qtitle">Birthday treat sabse pehle kya? 🎂</p>  
+        <div class="opts">  
+          <label class="opt"><input type="radio" name="q0" value="a"> Cake ka first bite</label>  
+          <label class="opt"><input type="radio" name="q0" value="b"> Ek tight hug</label>  
+          <label class="opt"><input type="radio" name="q0" value="c"> Dono ek sath 😜</label>  
+        </div>  
+      </div>  
 
-<!-- Quiz 2 (Slideshow) -->
-<section id="slideshow">
-  <div class="slides">
-    <div class="slide active"><img src="pic1.jpg" alt="Pic 1"></div>
-    <div class="slide"><img src="pic2.jpg" alt="Pic 2"></div>
-    <div class="slide"><img src="pic3.jpg" alt="Pic 3"></div>
-    <div class="slide"><img src="pic4.jpg" alt="Pic 4"></div>
-    <div class="slide"><img src="pic5.jpg" alt="Pic 5"></div>
-    <div class="slide"><img src="pic6.jpg" alt="Pic 6"></div>
-  </div>
-  <div class="controls">
-    <button class="prev">Prev</button>
-    <button class="next">Next</button>
-  </div>
-</section>
+      <div class="qcard" data-q="1" style="display:none">  
+        <p class="qtitle">Perfect plan for today? ✨</p>  
+        <div class="opts">  
+          <label class="opt"><input type="radio" name="q1" value="a"> Photos + surprises</label>  
+          <label class="opt"><input type="radio" name="q1" value="b"> Long drive + music</label>  
+          <label class="opt"><input type="radio" name="q1" value="c"> Dono + extra cuddles 💞</label>  
+        </div>  
+      </div>  
 
-<!-- Balloons & Cake -->
-<div class="balloons" aria-hidden="true">
-  <div class="balloon"></div>
-  <div class="balloon"></div>
-  <div class="balloon"></div>
-</div>
-<div class="cakeBox" aria-hidden="true">
-  <div class="cake">
-    <div class="layer"></div>
-    <div class="candle"></div>
-    <div class="flame"></div>
-  </div>
-</div>
+      <div class="qnav">  
+        <button class="btn" id="nextQ">Next</button>  
+        <button class="btn" id="finishQ" style="display:none">Finish</button>  
+      </div>  
+      <div class="score" id="scoreBox"></div>  
+    </div>  
+  </section>  
 
-<script>
-const overlay = document.getElementById('overlay');
-const playBtn = document.getElementById('playBtn');
-const q1 = document.getElementById('quiz1');
-const yes = document.getElementById('yesBtn');
-const succ = document.getElementById('successMsg');
-const q2 = document.getElementById('slideshow');
+  <!-- Personal message -->  
+  <section class="section message">  
+    <div class="note">  
+      <strong>Personal message:</strong>  
+      <p id="personalNote">  
+        "Happiest birthDay my jaanu janeman this day is so special for me bcz that day best thing comes on the earth that's you ab main zyada sabdo main to ky khu but my feelings for you is very genuine and you know how much I love youuu  one thing I wanna says that gile sikve to chlte rahenge but my felling for you never change aur plz dhayan Rakha kr apna khud ke liye na shi mere liye he"  
+      </p>  
+    </div>  
+    <div id="message" class="typewriter"></div>  
+  </section>  
 
-playBtn.addEventListener('click', ()=>{
-  overlay.style.display='none';
-  q1.classList.add('show');
-  // background music yahan add kar sakte ho
-});
+  <!-- Journey Gallery -->  
+  <section class="section gallery">  
+    <!-- Balloons (decorative, click-through) -->  
+    <div class="balloons" aria-hidden="true">  
+      <svg class="balloon" viewBox="0 0 64 96" fill="none" style="pointer-events:none">  
+        <ellipse cx="32" cy="30" rx="28" ry="30" fill="#ff3b81"/>  
+        <path d="M32 60 L32 96" stroke="#88445f" stroke-width="2"/>  
+        <circle cx="32" cy="60" r="6" fill="#ff3b81"/>  
+      </svg>  
+      <svg class="balloon" viewBox="0 0 64 96" fill="none" style="pointer-events:none">  
+        <ellipse cx="32" cy="30" rx="28" ry="30" fill="#ff7bb3"/>  
+        <path d="M32 60 L32 96" stroke="#6e4460" stroke-width="2"/>  
+        <circle cx="32" cy="60" r="6" fill="#ff7bb3"/>  
+      </svg>  
+      <svg class="balloon" viewBox="0 0 64 96" fill="none" style="pointer-events:none">  
+        <ellipse cx="32" cy="30" rx="28" ry="30" fill="#ffc1d9"/>  
+        <path d="M32 60 L32 96" stroke="#7f6a75" stroke-width="2"/>  
+        <circle cx="32" cy="60" r="6" fill="#ffc1d9"/>  
+      </svg>  
+    </div>  
 
-// Yes button -> show cake, balloons & slideshow
-yes.addEventListener('click', ()=>{
-  succ.classList.add('show');
-  setTimeout(()=> { 
-    q2.classList.add('show'); 
-    document.querySelector('.balloons').style.display = 'flex';
-    document.querySelector('.cakeBox').style.display = 'flex';
-  }, 1200);
-});
+    <div class="galleryWrap">  
+      <div id="slideshow" aria-label="Slideshow">  
+        <span class="prev" aria-label="Previous">&#10094;</span>  
+        <span class="next" aria-label="Next">&#10095;</span>  
+        <img src="pic1.jpg" class="slide active" alt="Slide 1">  
+        <img src="pic2.jpg" class="slide" alt="Slide 2">  
+        <img src="pic3.jpg" class="slide" alt="Slide 3">  
+        <img src="pic4.jpg" class="slide" alt="Slide 4">  
+        <img src="pic5.jpg" class="slide" alt="Slide 5">  
+        <img src="pic6.jpg" class="slide" alt="Slide 6">  
+      </div>  
 
-/* Slideshow */
-(function(){
-  const slides = Array.from(document.querySelectorAll('#slideshow .slide'));
-  const prevBtn = document.querySelector('#slideshow .prev');
-  const nextBtn = document.querySelector('#slideshow .next');
-  let idx = 0, timer = null, AUTO = 4200;
+      <!-- Cake (decorative, click-through) -->  
+      <div class="cakeBox" aria-hidden="true">  
+        <div class="cake">  
+          <div class="layer top"></div>  
+          <div class="layer middle"></div>  
+          <div class="layer bottom"></div>  
+          <div class="candle"><div class="flame"></div></div>  
+        </div>  
+      </div>  
+    </div>  
+  </section>  
+</div>  
 
-  function show(i){
-    slides[idx].classList.remove('active');
-    idx = (i + slides.length) % slides.length;
-    slides[idx].classList.add('active');
-  }
-  function next(){ show(idx+1); pauseAuto(); }
-  function prev(){ show(idx-1); pauseAuto(); }
+<!-- Audio -->  
+<audio id="myAudio" preload="auto" loop>  
+  <source src="aud.mp3" type="audio/mpeg">  
+</audio>
 
-  function startAuto(){
-    stopAuto();
-    timer = setInterval(()=> show(idx+1), AUTO);
-  }
-  function stopAuto(){
-    if(timer) clearInterval(timer);
-    timer = null;
-  }
-  function pauseAuto(){
-    stopAuto();
-    setTimeout(startAuto, 6000);
-  }
-
-  prevBtn.addEventListener('click', prev);
-  nextBtn.addEventListener('click', next);
-
-  const ss = document.getElementById('slideshow');
-  const observer = new MutationObserver(()=>{
-    if(ss.classList.contains('show')) startAuto();
-  });
-  observer.observe(ss, { attributes:true, attributeFilter:['class'] });
-})();
-</script>
-</body>
-</html>
+  </div>  
+</div>  <script>  
+/* Particles (lightweight) — decorative only */  
+(function(){  
+  const canvas = document.getElementById('bgCanvas'), ctx = canvas.getContext('2d');  
+  let w,h; function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; }  
+  addEventListener('resize', resize, {passive:true}); resize();  
+  const colors=['#ff3b81','#ff7bb3','#ffc1d9','#ffd1e6','#ffffff'];  
+  const N = innerWidth<480?60:100;  
+  const dots=Array.from({length:N},()=>({x:Math.random()*w,y:Math.random()*h,r:0.9+Math.random()*1.6,vx:-0.3+Math.random()*0.6,vy:-0.3+Math.random()*0.6,c:colors[(Math.random()*colors.length)|0],a:0.12+Math.random()*0.22}));  
+  function tick(){  
+    ctx.clearRect(0,0,w,h);  
+    for(const d of dots){  
+      d.x+=d.vx; d.y+=d.vy;  
+      if(d.x<0)d.x=w; else if(d.x>w)d.x=0;  
+      if(d.y<0)d.y=h; else if(d.y>h)d.y=0;  
+      ctx.beginPath(); ctx.arc(d.x,d.y,d.r,0,Math.PI*2);  
+      ctx.fillStyle=d.c; ctx.globalAlpha=d.a; ctx.fill();  
+    } ctx.globalAlpha=1; requestAnimationFrame(tick);  
+  } tick();  
+})();  
+  
+/* Quiz 1: Only-Yes — ensure overlays don't block */  
+(function(){  
+  const quiz = document.getElementById('quiz1');  
+  const yes = document.getElementById('yesBtn');  
+  const no = document.getElementById('noBtn');  
+  const succ = document.getElementById('success1');  
+  const q2 = document.getElementById('quiz2');  
+  
+  function moveNo(){  
+    no.classList.add('running');  
+    const rect = quiz.getBoundingClientRect();  
+    const nx = Math.random()*(rect.width-90);  
+    const ny = Math.random()*(rect.height-50);  
+    no.style.left = nx+'px';  
+    no.style.top = ny+'px';  
+  }  
+  no.addEventListener('pointerover', moveNo);  
+  no.addEventListener('pointerdown', moveNo);  
+  no.addEventListener('click', e=> e.preventDefault());  
+  
+  yes.addEventListener('click', ()=>{  
+    succ.classList.add('show');  
+    shootConfettiBurst();  
+    setTimeout(()=> { q2.classList.add('show'); }, 600);  
+  });  
+})();  
+  
+/* Quiz 2: Birthday quiz */  
+(function(){  
+  const q2 = document.getElementById('quiz2');  
+  const cards = Array.from(q2.querySelectorAll('.qcard'));  
+  const next = document.getElementById('nextQ');  
+  const finish = document.getElementById('finishQ');  
+  const scoreBox = document.getElementById('scoreBox');  
+  let step=0, score=0;  
+  
+  function showStep(i){  
+    cards.forEach((c,idx)=> c.style.display = idx===i ? 'block' : 'none');  
+    next.style.display = (i<cards.length-1) ? 'inline-block' : 'none';  
+    finish.style.display = (i===cards.length-1) ? 'inline-block' : 'none';  
+  }  
+  function getValue(i){  
+    const name='q'+i;  
+    const sel = q2.querySelector('input[name="'+name+'"]:checked');  
+    return sel ? sel.value : null;  
+  }  
+  showStep(step);  
+  
+  next.addEventListener('click', ()=>{  
+    const val = getValue(step);  
+    if(!val) { scoreBox.textContent = 'Please pick an option 😊'; return; }  
+    if(val==='c' || val==='b') score++;  
+    step++; showStep(step); scoreBox.textContent='';  
+  });  
+  
+  finish.addEventListener('click', ()=>{  
+    const val = getValue(step);  
+    if(!val) { scoreBox.textContent = 'Pick one more and finish! 🎉'; return; }  
+    if(val==='c' || val==='b') score++;  
+    scoreBox.textContent = 'Score: '+score+'/'+cards.length+' — perfect for a birthday star! 💫';  
+    shootConfettiBurst();  
+    setTimeout(()=>{  
+      const ss = document.getElementById('slideshow');  
+      ss.classList.add('show');   // enables pointer-events:auto  
+      // Fully hide quizzes so they don't intercept  
+      const q1 = document.getElementById('quiz1');  
+      const q2c = document.getElementById('quiz2');  
+      q1.style.display = 'none'; q2c.style.display = 'none';  
+      q1.setAttribute('inert',''); q2c.setAttribute('inert','');  
+      q1.setAttribute('aria-hidden','true'); q2c.setAttribute('aria-hidden','true');  
+    }, 700);  
+  });  
+})();  
+  
+/* Typewriter */  
+(function(){  
+  const el = document.getElementById('message');  
+  const lines = [  
+    "Happy Birthday, Kuku! 💗",  
+    "Aaj tumhari khushi sabse important hai.",  
+    "Har yaad me thoda sa jadoo hai.",  
+    "Chalo, journey dekhte hain..."  
+  ];  
+  const span = s => `<span>${s}</span>`;  
+  const seq = lines.map(span);  
+  const speed=34, hold=1400;  
+  let iLine=0, iChar=0;  
+  function typeLine(){  
+    if(iLine>=seq.length) return;  
+    const text = lines[iLine];  
+    const visible = text.slice(0,iChar);  
+    el.innerHTML = `<span>${visible}</span>`;  
+    if(iChar<text.length){ iChar++; setTimeout(typeLine, speed); }  
+    else { iLine++; iChar=0; setTimeout(typeLine, hold); }  
+  } typeLine();  
+})();  
+  
+/* Slideshow */  
+(function(){  
+  const slides = Array.from(document.querySelectorAll('#slideshow .slide'));  
+  const prevBtn = document.querySelector('#slideshow .prev');  
+  const nextBtn = document.querySelector('#slideshow .next');  
+  let idx=0, timer=null, AUTO=4200;  
+  
+  function show(i){  
+    slides[idx].classList.remove('active');  
+    idx=(i+slides.length)%slides.length;  
+    slides[idx].classList.add('active');  
+  }  
+  function next(){ show(idx+1); pauseAuto(); }  
+  function prev(){ show(idx-1); pauseAuto(); }  
+  function startAuto(){ stopAuto()
