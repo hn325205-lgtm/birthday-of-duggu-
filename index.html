@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Happiest Birthday moti 💗</title>
+<title>Happiest Birthday Moti 💗</title>
 <style>
   :root{
     --bg:#0d0a0d; --text:#fff; --accent:#ff3b81; --accent2:#ff7bb3; --accent3:#ffc1d9;
@@ -21,10 +21,10 @@
       radial-gradient(55vmax 55vmax at 50% 100%, rgba(255,193,217,0.30), transparent 60%),
       linear-gradient(180deg, #140e14, #120d12 40%, #0f0a10);
     animation:hue 18s ease-in-out infinite alternate; filter:saturate(118%);
-    pointer-events:none; /* clicks pass-through */ /* FIX */
+    pointer-events:none;
   }
   @keyframes hue{to{filter:hue-rotate(6deg) saturate(130%)}}
-  canvas.bg,canvas.confetti{position:fixed; inset:0; pointer-events:none} /* FIX */
+  canvas.bg,canvas.confetti{position:fixed; inset:0; pointer-events:none}
   canvas.bg{z-index:1} canvas.confetti{z-index:10}
 
   .wrap{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:5; padding: clamp(10px, 4vw, 28px);}
@@ -59,10 +59,6 @@
   .section{position:relative; min-height:0; border-bottom:1px solid rgba(255,255,255,0.16)}
   .section:last-child{border-bottom:none}
 
-  /* Reinforce: decorative layers click-through */
-  .mesh, #bgCanvas, #confettiCanvas { pointer-events: none; } /* FIX */
-
-  /* Quiz 1 */
   .quiz{position:relative; display:flex; flex-direction:column; align-items:center; text-align:center; padding: clamp(14px, 5vw, 28px); gap: clamp(12px, 3vw, 18px);}
   .quiz h2{margin:6px 0 0; font-size: clamp(22px, 6.6vw, 32px); background: linear-gradient(90deg, #fff, var(--accent2), var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
   .q{font-size: clamp(15px, 4.8vw, 18px); opacity:0.95}
@@ -79,9 +75,8 @@
   .success{display:none; flex-direction:column; align-items:center; gap:6px}
   .success.show{display:flex}
 
-  /* Quiz 2 */
   .quiz2{padding: clamp(14px, 5vw, 28px); display:none}
-  .quiz2.show{display:block} /* FIX: reveal when .show is added */
+  .quiz2.show{display:block} 
   .qcard{background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.22); border-radius:16px; padding: clamp(12px, 4vw, 16px); margin-top:10px}
   .qtitle{font-weight:700; margin:0 0 8px; font-size: clamp(16px, 4.8vw, 18px)}
   .opts{display:grid; gap:10px; margin-top:8px}
@@ -91,18 +86,16 @@
   .btn{padding:10px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.22); background:rgba(255,255,255,0.08); color:#fff; cursor:pointer}
   .score{margin-top:10px; font-size: clamp(14px, 4.4vw, 16px)}
 
-  /* Personal message */
   .note{padding: clamp(14px, 4vw, 18px); margin: clamp(8px, 3vw, 14px); border-radius:16px; background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.22); font-size: clamp(14px, 4.4vw, 16px); line-height:1.6}
   #message{margin: clamp(10px, 4vw, 16px); font-size: clamp(16px, 4.8vw, 20px)}
   .typewriter span{background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
 
-  /* Gallery */
   .galleryWrap{position:relative; height: min(58vh, 520px)}
   #slideshow{
     position:absolute; inset:0; overflow:hidden; opacity:.0; transition:opacity .7s ease; z-index:5;
-    pointer-events:none; /* disable until visible */ /* FIX */
+    pointer-events:none; 
   }
-  #slideshow.show{opacity:1; pointer-events:auto} /* FIX */
+  #slideshow.show{opacity:1; pointer-events:auto} 
   #slideshow .slide{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; opacity:0; transition:opacity 1s ease}
   #slideshow .slide.active{opacity:1}
   .prev,.next{
@@ -151,7 +144,7 @@
         </div>
       </section>
 
-      <section class="section quiz2">
+      <section class="section quiz2" style="display:none;">
         <div class="quiz2" id="quiz2">
           <div class="qcard" data-q="0">
             <p class="qtitle">Birthday treat sabse pehle kya? 🎂</p>
@@ -191,7 +184,7 @@
 
       <section class="section gallery">
         <div class="galleryWrap">
-          <div id="slideshow" aria-label="Slideshow" inert aria-hidden="true"> <!-- start inert -->
+          <div id="slideshow" aria-label="Slideshow" inert aria-hidden="true">
             <span class="prev" aria-label="Previous">&#10094;</span>
             <span class="next" aria-label="Next">&#10095;</span>
             <img src="pic1.jpg" class="slide active" alt="Slide 1">
@@ -237,187 +230,4 @@
 (function(){
   const canvas = document.getElementById('confettiCanvas');
   const ctx = canvas.getContext('2d');
-  let w,h; function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; }
-  addEventListener('resize', resize, {passive:true}); resize();
-
-  let pieces = [];
-  function burst(x=w/2, y=h/3){
-    const count = 80;
-    for(let i=0;i<count;i++){
-      pieces.push({ x, y, vx:(Math.random()*2-1)*4, vy:(Math.random()*-2-2)*3, g:0.12+Math.random()*0.08, s:3+Math.random()*3, a:1, c:['#ff3b81','#ff7bb3','#ffc1d9','#fff'][(Math.random()*4)|0], r:Math.random()*Math.PI });
-    }
-  }
-  function tick(){
-    ctx.clearRect(0,0,w,h);
-    pieces = pieces.filter(p=>p.a>0 && p.y < h+20);
-    for(const p of pieces){
-      p.vy += p.g; p.x += p.vx; p.y += p.vy; p.r += 0.1; p.a -= 0.01 + Math.random()*0.01;
-      ctx.save(); ctx.globalAlpha = Math.max(0,p.a); ctx.translate(p.x,p.y); ctx.rotate(p.r); ctx.fillStyle = p.c; ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*1.4); ctx.restore();
-    }
-    requestAnimationFrame(tick);
-  }
-  tick();
-  window.shootConfettiBurst = () => burst();
-})();
-
-/* Quiz 1 */
-(function(){
-  const quiz = document.getElementById('quiz1');
-  const yes = document.getElementById('yesBtn');
-  const no = document.getElementById('noBtn');
-  const succ = document.getElementById('success1');
-  const q2 = document.getElementById('quiz2');
-
-  function moveNo(){
-    no.classList.add('running');
-    const rect = quiz.getBoundingClientRect();
-    const nx = Math.random()*(rect.width-90);
-    const ny = Math.random()*(rect.height-50);
-    no.style.left = nx+'px';
-    no.style.top = ny+'px';
-  }
-  no.addEventListener('pointerover', moveNo);
-  no.addEventListener('pointerdown', moveNo);
-  no.addEventListener('click', e=> e.preventDefault());
-
-  yes.addEventListener('click', ()=>{
-    succ.classList.add('show');
-    shootConfettiBurst();
-    setTimeout(()=> { q2.classList.add('show'); }, 600); /* .quiz2.show => display:block */
-  }, {passive:true});
-})();
-
-/* Quiz 2 */
-(function(){
-  const q2 = document.getElementById('quiz2');
-  const cards = Array.from(q2.querySelectorAll('.qcard'));
-  const next = document.getElementById('nextQ');
-  const finish = document.getElementById('finishQ');
-  const scoreBox = document.getElementById('scoreBox');
-  let step=0, score=0;
-
-  function showStep(i){
-    cards.forEach((c,idx)=> c.style.display = idx===i ? 'block' : 'none');
-    next.style.display = (i<cards.length-1) ? 'inline-block' : 'none';
-    finish.style.display = (i===cards.length-1) ? 'inline-block' : 'none';
-  }
-  function getValue(i){
-    const name='q'+i;
-    const sel = q2.querySelector('input[name="'+name+'"]:checked');
-    return sel ? sel.value : null;
-  }
-  showStep(step);
-
-  next.addEventListener('click', ()=>{
-    const val = getValue(step);
-    if(!val) { scoreBox.textContent = 'Please pick an option 😊'; return; }
-    if(val==='c' || val==='b') score++;
-    step++; showStep(step); scoreBox.textContent='';
-  }, {passive:true});
-
-  finish.addEventListener('click', ()=>{
-    const val = getValue(step);
-    if(!val) { scoreBox.textContent = 'Pick one more and finish! 🎉'; return; }
-    if(val==='c' || val==='b') score++;
-    scoreBox.textContent = 'Score: '+score+'/'+cards.length+' — perfect for a birthday star! 💫';
-    shootConfettiBurst();
-    setTimeout(()=>{
-      const ss = document.getElementById('slideshow');
-      ss.classList.add('show');   // enable pointer-events
-      const q1 = document.getElementById('quiz1');
-      const q2c = document.getElementById('quiz2');
-      q1.style.display = 'none'; q2c.style.display = 'none';
-      q1.setAttribute('inert',''); q2c.setAttribute('inert','');   // prevent hidden capture
-      q1.setAttribute('aria-hidden','true'); q2c.setAttribute('aria-hidden','true');
-      ss.removeAttribute('inert'); ss.removeAttribute('aria-hidden');
-    }, 700);
-  }, {passive:true});
-})();
-
-/* Typewriter */
-(function(){
-  const el = document.getElementById('message');
-  const lines = [
-    "Happy Birthday, Kuku! 💗",
-    "Aankho ki chamak palko ki shan ho tum",
-    "Chehre hi hasi lamho ki muskan ho tum",
-    "Dhadakta hai dil bas tumhari arzu mai",
-    "Fir kaise na kahu, Meri jaan ho tum",
-  ];
-  const speed=34, hold=1400;
-  let iLine=0, iChar=0;
-  function typeLine(){
-    if(iLine>=lines.length) return;
-    const text = lines[iLine];
-    const visible = text.slice(0,iChar);
-    el.innerHTML = `<span>${visible}</span>`;
-    if(iChar<text.length){ iChar++; setTimeout(typeLine, speed); }
-    else { iLine++; iChar=0; setTimeout(typeLine, hold); }
-  } typeLine();
-})();
-
-/* Slideshow */
-(function(){
-  const slides = Array.from(document.querySelectorAll('#slideshow .slide'));
-  const prevBtn = document.querySelector('#slideshow .prev');
-  const nextBtn = document.querySelector('#slideshow .next');
-  let idx=0, timer=null, AUTO=4200;
-
-  function show(i){
-    slides[idx].classList.remove('active');
-    idx=(i+slides.length)%slides.length;
-    slides[idx].classList.add('active');
-  }
-  function next(){ show(idx+1); pauseAuto(); }
-  function prev(){ show(idx-1); pauseAuto(); }
-
-  function startAuto(){ stopAuto(); timer=setInterval(()=>show(idx+1), AUTO); }
-  function stopAuto(){ if(timer){ clearInterval(timer); timer=null; } }
-  function pauseAuto(){ stopAuto(); startAuto(); }
-
-  prevBtn.addEventListener('click', prev, {passive:true});
-  nextBtn.addEventListener('click', next, {passive:true});
-  startAuto();
-})();
-
-/* Audio toggle (gesture-based) */
-(function(){
-  const audio = document.getElementById('myAudio');
-  const btn = document.getElementById('audioBtn');
-  const hint = document.getElementById('tapHint');
-  let playing = false;
-
-  function updateUI(){
-    btn.textContent = playing ? 'Pause music' : 'Play music';
-    btn.setAttribute('aria-pressed', String(playing));
-    hint.style.display = playing ? 'none' : 'inline-block';
-  }
-
-  async function toggle(){
-    try{
-      if(!playing){
-        const p = audio.play();
-        if (p && typeof p.then === 'function') await p; /* handle promise */
-        playing = true;
-      }else{
-        audio.pause();
-        playing = false;
-      }
-    }catch(e){
-      playing = false;
-      console.warn('Playback blocked until user gesture', e);
-    }finally{
-      updateUI();
-    }
-  }
-
-  btn.addEventListener('click', toggle, {passive:true});
-  btn.addEventListener('pointerup', ()=>{ if(!playing) toggle(); }, {passive:true});
-
-  audio.muted = false;
-  audio.loop = true;
-  updateUI();
-})();
-</script>
-</body>
-</html>
+  let w,h; function resize(){ w=canvas.width=innerWidth; h
