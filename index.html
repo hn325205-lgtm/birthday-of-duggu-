@@ -1,207 +1,73 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Happiest Birthday Moti 💗</title>
-<style>
-  :root{
-    --bg:#0d0a0d; --text:#fff; --accent:#ff3b81; --accent2:#ff7bb3; --accent3:#ffc1d9;
-    --glass: rgba(255,255,255,0.10); --glass-border: rgba(255,255,255,0.28);
-  }
-  *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0; color:var(--text); background:#0b080c; overflow:hidden; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;}
-
-  /* Background mesh */
-  .mesh{
-    position:fixed; inset:0; z-index:0;
-    background:
-      radial-gradient(50vmax 50vmax at 10% 20%, rgba(255,59,129,0.35), transparent 60%),
-      radial-gradient(45vmax 45vmax at 90% 10%, rgba(255,123,179,0.28), transparent 60%),
-      radial-gradient(55vmax 55vmax at 50% 100%, rgba(255,193,217,0.30), transparent 60%),
-      linear-gradient(180deg, #140e14, #120d12 40%, #0f0a10);
-    animation:hue 18s ease-in-out infinite alternate; filter:saturate(118%);
-    pointer-events:none;
-  }
-  @keyframes hue{to{filter:hue-rotate(6deg) saturate(130%)}}
-  canvas.bg,canvas.confetti{position:fixed; inset:0; pointer-events:none}
-  canvas.bg{z-index:1} canvas.confetti{z-index:10}
-
-  .wrap{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:5; padding: clamp(10px, 4vw, 28px);}
-  .card{
-    width:min(980px,100%); height:min(92vh, 780px); background:var(--glass);
-    border:1px solid var(--glass-border); border-radius: clamp(14px, 3vw, 24px);
-    backdrop-filter: blur(14px) saturate(120%); -webkit-backdrop-filter: blur(14px) saturate(120%);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.08);
-    overflow:hidden; position:relative;
-  }
-
-  .bar{
-    position:absolute; top:0; left:0; right:0; height:56px; display:flex; align-items:center; justify-content:space-between;
-    padding:0 clamp(10px,3vw,16px);
-    background:linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
-    border-bottom:1px solid rgba(255,255,255,0.22);
-    z-index:6;
-  }
-  .title{font-weight:700; letter-spacing:.2px; font-size: clamp(16px, 3.8vw, 20px);}
-  .actions{display:flex; gap: clamp(6px,2vw,10px)}
-  #audioBtn{padding: clamp(8px, 2.6vw, 10px) clamp(12px, 4vw, 16px); font-size: clamp(13px, 3.6vw, 15px); background:var(--accent); color:#fff; border:none; border-radius:10px; cursor:pointer}
-  #tapHint{display:inline-block; font-size: clamp(11px, 3.2vw, 12px); padding:6px 10px; border-radius:9px; background:rgba(0,0,0,.35)}
-
-  .main{position:absolute; inset:56px 0 0 0; display:grid; grid-auto-rows: minmax(0, auto); grid-template-rows: auto auto auto 1fr;}
-  @media (min-width: 900px){
-    .main{grid-template-columns: 0.95fr 1.05fr; grid-template-rows: 1fr 1fr; gap:0;}
-    .section.quiz1{grid-column:1 / span 2; grid-row:1}
-    .section.quiz2{grid-column:1; grid-row:2}
-    .section.message{grid-column:1; grid-row:2}
-    .section.gallery{grid-column:2; grid-row:1 / span 2}
-  }
-  .section{position:relative; min-height:0; border-bottom:1px solid rgba(255,255,255,0.16)}
-  .section:last-child{border-bottom:none}
-
-  .quiz{position:relative; display:flex; flex-direction:column; align-items:center; text-align:center; padding: clamp(14px, 5vw, 28px); gap: clamp(12px, 3vw, 18px);}
-  .quiz h2{margin:6px 0 0; font-size: clamp(22px, 6.6vw, 32px); background: linear-gradient(90deg, #fff, var(--accent2), var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
-  .q{font-size: clamp(15px, 4.8vw, 18px); opacity:0.95}
-  .btns{display:flex; gap: clamp(10px, 4vw, 16px); margin-top:6px; position:relative}
-  .yes,.no{
-    padding: clamp(10px, 3.8vw, 12px) clamp(14px, 6vw, 18px); border-radius:14px;
-    border:1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.10); color:#fff;
-    font-size: clamp(14px, 4.2vw, 16px); cursor:pointer; transition: transform .15s ease, background .2s ease, box-shadow .2s ease;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-  }
-  .yes:hover{transform:translateY(-1px); background:rgba(255,59,129,0.35); box-shadow:0 10px 24px rgba(255,59,129,0.25)}
-  .no.running{position:absolute}
-  .seal{font-size: clamp(11px, 3.4vw, 13px); opacity:0.85}
-  .success{display:none; flex-direction:column; align-items:center; gap:6px}
-  .success.show{display:flex}
-
-  .quiz2{padding: clamp(14px, 5vw, 28px); display:none}
-  .quiz2.show{display:block} 
-  .qcard{background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.22); border-radius:16px; padding: clamp(12px, 4vw, 16px); margin-top:10px}
-  .qtitle{font-weight:700; margin:0 0 8px; font-size: clamp(16px, 4.8vw, 18px)}
-  .opts{display:grid; gap:10px; margin-top:8px}
-  .opt{display:flex; align-items:center; gap:10px; background:rgba(255,255,255,0.06); padding:10px 12px; border-radius:12px; cursor:pointer; border:1px solid rgba(255,255,255,0.12)}
-  .opt input{accent-color: var(--accent)}
-  .qnav{display:flex; gap:10px; margin-top:12px}
-  .btn{padding:10px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.22); background:rgba(255,255,255,0.08); color:#fff; cursor:pointer}
-  .score{margin-top:10px; font-size: clamp(14px, 4.4vw, 16px)}
-
-  .note{padding: clamp(14px, 4vw, 18px); margin: clamp(8px, 3vw, 14px); border-radius:16px; background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.22); font-size: clamp(14px, 4.4vw, 16px); line-height:1.6}
-  #message{margin: clamp(10px, 4vw, 16px); font-size: clamp(16px, 4.8vw, 20px)}
-  .typewriter span{background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
-
-  .galleryWrap{position:relative; height: min(58vh, 520px)}
-  #slideshow{
-    position:absolute; inset:0; overflow:hidden; opacity:.0; transition:opacity .7s ease; z-index:5;
-    pointer-events:none; 
-  }
-  #slideshow.show{opacity:1; pointer-events:auto} 
-  #slideshow .slide{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; opacity:0; transition:opacity 1s ease}
-  #slideshow .slide.active{opacity:1}
-  .prev,.next{
-    cursor:pointer; position:absolute; top:50%; transform:translateY(-50%);
-    padding:8px 10px; color:white; font-size: clamp(26px, 6.5vw, 34px);
-    background:rgba(0,0,0,0.35); border-radius:10px; user-select:none; z-index:6;
-    min-width:44px; min-height:44px;
-  }
-  .prev{left:10px} .next{right:10px}
-  .prev:hover,.next:hover{background:rgba(0,0,0,0.55)}
-
-  .heart{position:absolute;width:18px;height:18px;background:#ff3b81;transform:rotate(45deg);opacity:0.85;z-index:4}
-  .heart::before,.heart::after{content:"";position:absolute;width:18px;height:18px;background:#ff3b81;border-radius:50%}
-  .heart::before{top:-9px;left:0} .heart::after{left:9px;top:0}
-  @keyframes floatHeart{0%{transform:translate(0,0) rotate(45deg);opacity:.9}50%{opacity:1}100%{transform:translate(0,-520px) rotate(45deg);opacity:0}}
-</style>
-</head>
-<body>
-<div class="mesh"></div>
-<canvas id="bgCanvas" class="bg"></canvas>
-<canvas id="confettiCanvas" class="confetti"></canvas>
-
-<div class="wrap">
-  <div class="card">
-    <div class="bar">
-      <div class="title">Happiest birthday Moti 💗</div>
-      <div class="actions">
-        <button id="audioBtn" aria-pressed="false">Play music</button>
-        <span id="tapHint">Tap play if muted</span>
+<div class='main'>
+  <section class='section quiz1'>
+    <div class='quiz' id='quiz1'>
+      <h2>Quick quiz for you ✨</h2>
+      <div class='q'>Kya tumhe mujhse <span style='color:#ffc1d9'>pyaar</span> hai? 😉</div>
+      <div class='btns'>
+        <button class='yes' id='yesBtn'>Yes, always! 💖</button>
+        <button class='no' id='noBtn' aria-disabled='true'>No</button>
+      </div>
+      <div class='seal'>No select hi nahi hoga… destiny says only “Yes” 😄</div>
+      <div class='success' id='success1'>
+        <p>Yay! Ab ek chhota birthday quiz… phir journey gallery! 🎉</p>
       </div>
     </div>
+  </section>
 
-    <div class="main">
-      <section class="section quiz1">
-        <div class="quiz" id="quiz1">
-          <h2>Quick quiz for you ✨</h2>
-          <div class="q">Kya tumhe mujhse <span style="color:#ffc1d9">pyaar</span> hai? 😉</div>
-          <div class="btns">
-            <button class="yes" id="yesBtn">Yes, always! 💖</button>
-            <button class="no" id="noBtn" aria-disabled="true">No</button>
-          </div>
-          <div class="seal">No select hi nahi hoga… destiny says only “Yes” 😄</div>
-          <div class="success" id="success1">
-            <p>Yay! Ab ek chhota birthday quiz… phir journey gallery! 🎉</p>
-          </div>
+  <section class='section quiz2'>
+    <div class='quiz2' id='quiz2'>
+      <div class='qcard' data-q='0'>
+        <p class='qtitle'>Birthday treat sabse pehle kya? 🎂</p>
+        <div class='opts'>
+          <label class='opt'><input type='radio' name='q0' value='a'> Cake ka first bite</label>
+          <label class='opt'><input type='radio' name='q0' value='b'> Ek tight hug</label>
+          <label class='opt'><input type='radio' name='q0' value='c'> Dono ek sath 😜</label>
         </div>
-      </section>
+      </div>
 
-      <section class="section quiz2" style="display:none;">
-        <div class="quiz2" id="quiz2">
-          <div class="qcard" data-q="0">
-            <p class="qtitle">Birthday treat sabse pehle kya? 🎂</p>
-            <div class="opts">
-              <label class="opt"><input type="radio" name="q0" value="a"> Cake ka first bite</label>
-              <label class="opt"><input type="radio" name="q0" value="b"> Ek tight hug</label>
-              <label class="opt"><input type="radio" name="q0" value="c"> Dono ek sath 😜</label>
-            </div>
-          </div>
-
-          <div class="qcard" data-q="1" style="display:none">
-            <p class="qtitle">Perfect plan for today? ✨</p>
-            <div class="opts">
-              <label class="opt"><input type="radio" name="q1" value="a"> Photos + surprises</label>
-              <label class="opt"><input type="radio" name="q1" value="b"> Long drive + music</label>
-              <label class="opt"><input type="radio" name="q1" value="c"> Dono + extra cuddles 💞</label>
-            </div>
-          </div>
-
-          <div class="qnav">
-            <button class="btn" id="nextQ">Next</button>
-            <button class="btn" id="finishQ" style="display:none">Finish</button>
-          </div>
-          <div class="score" id="scoreBox"></div>
+      <div class='qcard' data-q='1' style='display:none'>
+        <p class='qtitle'>Perfect plan for today? ✨</p>
+        <div class='opts'>
+          <label class='opt'><input type='radio' name='q1' value='a'> Photos + surprises</label>
+          <label class='opt'><input type='radio' name='q1' value='b'> Long drive + music</label>
+          <label class='opt'><input type='radio' name='q1' value='c'> Dono + extra cuddles 💞</label>
         </div>
-      </section>
+      </div>
 
-      <section class="section message">
-        <div class="note">
-          <strong>Personal message:</strong>
-          <p id="personalNote">
-            "Happiest birthDay my jaanu janeman this day is so special for me bcz that day best thing comes on the earth that's you ab main zyada sabdo main to ky khu but my feelings for you is very genuine and you know how much I love youuu  one thing I wanna says that gile sikve to chlte rahenge but my felling for you never change aur plz dhayan Rakha kr apna khud ke liye na shi mere liye he"
-          </p>
-        </div>
-        <div id="message" class="typewriter"></div>
-      </section>
-
-      <section class="section gallery">
-        <div class="galleryWrap">
-          <div id="slideshow" aria-label="Slideshow" inert aria-hidden="true">
-            <span class="prev" aria-label="Previous">&#10094;</span>
-            <span class="next" aria-label="Next">&#10095;</span>
-            <img src="pic1.jpg" class="slide active" alt="Slide 1">
-            <img src="pic2.jpg" class="slide" alt="Slide 2">
-            <img src="pic3.jpg" class="slide" alt="Slide 3">
-            <img src="pic4.jpg" class="slide" alt="Slide 4">
-            <img src="pic5.jpg" class="slide" alt="Slide 5">
-            <img src="pic6.jpg" class="slide" alt="Slide 6">
-          </div>
-        </div>
-      </section>
+      <div class='qnav'>
+        <button class='btn' id='nextQ'>Next</button>
+        <button class='btn' id='finishQ' style='display:none'>Finish</button>
+      </div>
+      <div class='score' id='scoreBox'></div>
     </div>
+  </section>
 
-    <audio id="myAudio" preload="auto" loop>
-      <source src="aud.mp3" type="audio/mpeg">
-    </audio>
+  <section class='section message' id='msgSection'>
+    <div class='note'>
+      <strong>Personal message:</strong>
+      <p id='personalNote'>
+        'Happiest birthDay my jaanu janeman ... mere liye he'
+      </p>
+    </div>
+    <div id='message' class='typewriter'></div>
+  </section>
 
-  </div>
+  <section class='section gallery'>
+    <div class='galleryWrap'>
+      <div id='slideshow' aria-label='Slideshow' inert aria-hidden='true'>
+        <span class='prev' aria-label='Previous'>&#10094;</span>
+        <span class='next' aria-label='Next'>&#10095;</span>
+        <img src='pic1.jpg' class='slide active' alt='Slide 1'>
+        <img src='pic2.jpg' class='slide' alt='Slide 2'>
+        <img src='pic3.jpg' class='slide' alt='Slide 3'>
+        <img src='pic4.jpg' class='slide' alt='Slide 4'>
+        <img src='pic5.jpg' class='slide' alt='Slide 5'>
+        <img src='pic6.jpg' class='slide' alt='Slide 6'>
+      </div>
+    </div>
+  </section>
 </div>
 
+<audio id='myAudio' preload='auto' loop>
+  <source src='aud.mp3' type='audio/mpeg'>
+</audio>
