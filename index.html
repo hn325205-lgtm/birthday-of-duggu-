@@ -425,3 +425,43 @@
   function next(){ show(idx+1); pauseAuto(); }
   function prev(){ show(idx-1); pauseAuto(); }
   function startAuto(){ stopAuto()
+<script>
+/* Slideshow */
+(function(){
+  const slides = Array.from(document.querySelectorAll('#slideshow .slide'));
+  const prevBtn = document.querySelector('#slideshow .prev');
+  const nextBtn = document.querySelector('#slideshow .next');
+  let idx = 0, timer = null, AUTO = 4200;
+
+  function show(i){
+    slides[idx].classList.remove('active');
+    idx = (i + slides.length) % slides.length;
+    slides[idx].classList.add('active');
+  }
+  function next(){ show(idx+1); pauseAuto(); }
+  function prev(){ show(idx-1); pauseAuto(); }
+
+  function startAuto(){
+    stopAuto();
+    timer = setInterval(()=> show(idx+1), AUTO);
+  }
+  function stopAuto(){
+    if(timer) clearInterval(timer);
+    timer = null;
+  }
+  function pauseAuto(){
+    stopAuto();
+    setTimeout(startAuto, 6000); // user click ke baad thoda delay se resume
+  }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  // Start auto slideshow jab gallery visible ho jaye
+  const ss = document.getElementById('slideshow');
+  const observer = new MutationObserver(()=>{
+    if(ss.classList.contains('show')) startAuto();
+  });
+  observer.observe(ss, { attributes:true, attributeFilter:['class'] });
+})();
+</script>
