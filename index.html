@@ -6,26 +6,33 @@
 <title>Happiest Birthday moti 💗</title>
 <style>
   :root{
+    /* Pink theme */
     --bg:#0d0a0d;
     --text:#fff;
-    --accent:#ff3b81;
-    --accent2:#ff7bb3;
-    --accent3:#ffc1d9;
+    --accent:#ff3b81;         /* primary pink */
+    --accent2:#ff7bb3;        /* light pink */
+    --accent3:#ffc1d9;        /* pale pink */
     --glass: rgba(255,255,255,0.10);
     --glass-border: rgba(255,255,255,0.28);
   }
   *{box-sizing:border-box}
-  html,body{height:100%; margin:0; color:var(--text); background:#0b080c; overflow:hidden;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--text); background:#0b080c; overflow:hidden;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+  }
 
-  /* Background mesh + particles */
-  .mesh{position:fixed; inset:0; z-index:0; background:
-    radial-gradient(50vmax 50vmax at 10% 20%, rgba(255,59,129,0.35), transparent 60%),
-    radial-gradient(45vmax 45vmax at 90% 10%, rgba(255,123,179,0.28), transparent 60%),
-    radial-gradient(55vmax 55vmax at 50% 100%, rgba(255,193,217,0.30), transparent 60%),
-    linear-gradient(180deg, #140e14, #120d12 40%, #0f0a10);
+  /* Background mesh (pink) + particles */
+  .mesh{
+    position:fixed; inset:0; z-index:0;
+    background:
+      radial-gradient(50vmax 50vmax at 10% 20%, rgba(255,59,129,0.35), transparent 60%),
+      radial-gradient(45vmax 45vmax at 90% 10%, rgba(255,123,179,0.28), transparent 60%),
+      radial-gradient(55vmax 55vmax at 50% 100%, rgba(255,193,217,0.30), transparent 60%),
+      linear-gradient(180deg, #140e14, #120d12 40%, #0f0a10);
     animation:hue 18s ease-in-out infinite alternate; filter:saturate(118%);
-    pointer-events:none;}
+    pointer-events:none; /* decorative only */
+  }
   @keyframes hue{to{filter:hue-rotate(6deg) saturate(130%)}}
   canvas.bg,canvas.confetti{position:fixed; inset:0; pointer-events:none}
   canvas.bg{z-index:1} canvas.confetti{z-index:10}
@@ -46,7 +53,7 @@
     padding:0 clamp(10px,3vw,16px);
     background:linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
     border-bottom:1px solid rgba(255,255,255,0.22);
-    z-index:6;
+    z-index:6; /* keep above content for taps */
   }
   .title{font-weight:700; letter-spacing:.2px; font-size: clamp(16px, 3.8vw, 20px);}
   .actions{display:flex; gap: clamp(6px,2vw,10px)}
@@ -69,20 +76,10 @@
   .section{position:relative; min-height:0; border-bottom:1px solid rgba(255,255,255,0.16)}
   .section:last-child{border-bottom:none}
 
-  /* Make visual layers click-through */
-  .mesh, .balloons, .cakeBox, #bgCanvas, #confettiCanvas { pointer-events: none; }
+  /* Make visual layers click-through (critical for Yes button) */
+  .mesh, #bgCanvas, #confettiCanvas { pointer-events: none; }
 
-  /* Balloons behind slideshow */
-  .balloons{
-    position:absolute; top:10px; left:0; right:0; display:flex; justify-content:center;
-    gap: clamp(10px, 6vw, 30px); z-index:2; opacity:0.92;
-    pointer-events:none;
-  }
-  .balloon{width: clamp(46px, 18vw, 90px); animation: floatY 5.5s ease-in-out infinite; filter: drop-shadow(0 6px 8px rgba(0,0,0,.25))}
-  .balloon:nth-child(2){animation-delay: .8s} .balloon:nth-child(3){animation-delay: 1.5s}
-  @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-
-  /* Quiz 1 */
+  /* Quiz 1: Yes-only gate */
   .quiz{position:relative; display:flex; flex-direction:column; align-items:center; text-align:center; padding: clamp(14px, 5vw, 28px); gap: clamp(12px, 3vw, 18px);}
   .quiz h2{
     margin:6px 0 0; font-size: clamp(22px, 6.6vw, 32px);
@@ -126,8 +123,8 @@
   /* Gallery */
   .galleryWrap{position:relative; height: min(58vh, 520px)}
   #slideshow{
-    position:absolute; inset:0; overflow:hidden; opacity:0; transition:opacity .7s ease; z-index:5;
-    pointer-events:none;
+    position:absolute; inset:0; overflow:hidden; opacity:.0; transition:opacity .7s ease; z-index:5;
+    pointer-events:none; /* hidden state should not capture */
   }
   #slideshow.show{opacity:1; pointer-events:auto;}
   #slideshow .slide{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; opacity:0; transition:opacity 1s ease}
@@ -136,21 +133,10 @@
     cursor:pointer; position:absolute; top:50%; transform:translateY(-50%);
     padding:8px 10px; color:white; font-size: clamp(26px, 6.5vw, 34px);
     background:rgba(0,0,0,0.35); border-radius:10px; user-select:none; z-index:6;
-    min-width:44px; min-height:44px;
+    min-width:44px; min-height:44px; /* mobile tap target */
   }
   .prev{left:10px} .next{right:10px}
   .prev:hover,.next:hover{background:rgba(0,0,0,0.55)}
-
-  /* Cake */
-  .cakeBox{position:absolute; bottom:8px; left:50%; transform:translateX(-50%); z-index:2; pointer-events:none;}
-  .cake{width: clamp(140px, 52vw, 220px); height: clamp(120px, 38vw, 180px); position:relative}
-  .layer{width:100%; height:33%; background: #ff7bb3; border-radius: 10px; position:absolute; left:0; box-shadow: inset 0 -8px 0 rgba(255,255,255,0.15)}
-  .layer.bottom{bottom:0}
-  .layer.middle{bottom:33%; transform: scale(.88); left:6%}
-  .layer.top{bottom:66%; transform: scale(.76); left:12%}
-  .candle{position:absolute; bottom: calc(66% + 18px); left:50%; transform:translateX(-50%); width: clamp(10px, 3vw, 14px); height: clamp(38px, 12vw, 48px); background: repeating-linear-gradient(45deg, #ff3b81 0, #ff3b81 6px, #ffc1d9 6px, #ffc1d9 12px); border-radius: 6px}
-  .flame{position:absolute; top:-18px; left:50%; transform: translateX(-50%); width: clamp(10px, 3vw, 14px); height: clamp(16px, 5vw, 20px); background: radial-gradient(ellipse at center, #ffd1e6 0%, #ff3b81 70%, rgba(255,59,129,0.4) 100%); border-radius: 50%; animation: flicker .22s infinite alternate; filter: blur(.3px)}
-  @keyframes flicker{from{transform:translateX(-50%) scale(1)} to{transform:translateX(-50%) scale(1.07)}}
 
   /* Hearts */
   .heart{position:absolute;width:18px;height:18px;background:#ff3b81;transform:rotate(45deg);opacity:0.85;z-index:4}
@@ -163,6 +149,7 @@
 <div class="mesh"></div>
 <canvas id="bgCanvas" class="bg"></canvas>
 <canvas id="confettiCanvas" class="confetti"></canvas>
+
 <div class="wrap">
   <div class="card">
     <div class="bar">
@@ -174,7 +161,7 @@
     </div>
 
     <div class="main">
-      <!-- Quiz 1 -->
+      <!-- Quiz 1: Yes-only -->
       <section class="section quiz1">
         <div class="quiz" id="quiz1">
           <h2>Quick quiz for you ✨</h2>
@@ -190,7 +177,7 @@
         </div>
       </section>
 
-      <!-- Quiz 2 -->
+      <!-- Quiz 2: Birthday quiz -->
       <section class="section quiz2">
         <div class="quiz2" id="quiz2">
           <div class="qcard" data-q="0">
@@ -224,4 +211,260 @@
         <div class="note">
           <strong>Personal message:</strong>
           <p id="personalNote">
-            "Happiest birthDay my jaanu janeman this day is so special for me bcz that day best thing comes on the
+            "Happiest birthDay my jaanu janeman this day is so special for me bcz that day best thing comes on the earth that's you ab main zyada sabdo main to ky khu but my feelings for you is very genuine and you know how much I love youuu  one thing I wanna says that gile sikve to chlte rahenge but my felling for you never change aur plz dhayan Rakha kr apna khud ke liye na shi mere liye he"
+          </p>
+        </div>
+        <div id="message" class="typewriter"></div>
+      </section>
+
+      <!-- Journey Gallery -->
+      <section class="section gallery">
+        <div class="galleryWrap">
+          <div id="slideshow" aria-label="Slideshow">
+            <span class="prev" aria-label="Previous">&#10094;</span>
+            <span class="next" aria-label="Next">&#10095;</span>
+            <img src="pic1.jpg" class="slide active" alt="Slide 1">
+            <img src="pic2.jpg" class="slide" alt="Slide 2">
+            <img src="pic3.jpg" class="slide" alt="Slide 3">
+            <img src="pic4.jpg" class="slide" alt="Slide 4">
+            <img src="pic5.jpg" class="slide" alt="Slide 5">
+            <img src="pic6.jpg" class="slide" alt="Slide 6">
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Audio -->
+    <audio id="myAudio" preload="auto" loop>
+      <source src="aud.mp3" type="audio/mpeg">
+    </audio>
+
+  </div>
+</div>
+
+<script>
+/* Particles (lightweight) — decorative only */
+(function(){
+  const canvas = document.getElementById('bgCanvas'), ctx = canvas.getContext('2d');
+  let w,h; function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; }
+  addEventListener('resize', resize, {passive:true}); resize();
+  const colors=['#ff3b81','#ff7bb3','#ffc1d9','#ffd1e6','#ffffff'];
+  const N = innerWidth<480?60:100;
+  const dots=Array.from({length:N},()=>({x:Math.random()*w,y:Math.random()*h,r:0.9+Math.random()*1.6,vx:-0.3+Math.random()*0.6,vy:-0.3+Math.random()*0.6,c:colors[(Math.random()*colors.length)|0],a:0.12+Math.random()*0.22}));
+  function tick(){
+    ctx.clearRect(0,0,w,h);
+    for(const d of dots){
+      d.x+=d.vx; d.y+=d.vy;
+      if(d.x<0)d.x=w; else if(d.x>w)d.x=0;
+      if(d.y<0)d.y=h; else if(d.y>h)d.y=0;
+      ctx.beginPath(); ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+      ctx.fillStyle=d.c; ctx.globalAlpha=d.a; ctx.fill();
+    } ctx.globalAlpha=1; requestAnimationFrame(tick);
+  } tick();
+})();
+
+/* Confetti (burst) — lightweight canvas */
+(function(){
+  const canvas = document.getElementById('confettiCanvas');
+  const ctx = canvas.getContext('2d');
+  let w,h; function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; }
+  addEventListener('resize', resize, {passive:true}); resize();
+
+  let pieces = [];
+  function burst(x=w/2, y=h/3){
+    const count = 80;
+    for(let i=0;i<count;i++){
+      pieces.push({
+        x, y,
+        vx:(Math.random()*2-1)*4,
+        vy:(Math.random()*-2-2)*3,
+        g:0.12+Math.random()*0.08,
+        s:3+Math.random()*3,
+        a:1,
+        c:['#ff3b81','#ff7bb3','#ffc1d9','#fff'][(Math.random()*4)|0],
+        r:Math.random()*Math.PI
+      });
+    }
+  }
+  function tick(){
+    ctx.clearRect(0,0,w,h);
+    pieces = pieces.filter(p=>p.a>0 && p.y < h+20);
+    for(const p of pieces){
+      p.vy += p.g;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.r += 0.1;
+      p.a -= 0.01 + Math.random()*0.01;
+      ctx.save();
+      ctx.globalAlpha = Math.max(0,p.a);
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.r);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*1.4);
+      ctx.restore();
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+
+  window.shootConfettiBurst = () => burst();
+})();
+
+/* Quiz 1: Only-Yes — ensure overlays don't block */
+(function(){
+  const quiz = document.getElementById('quiz1');
+  const yes = document.getElementById('yesBtn');
+  const no = document.getElementById('noBtn');
+  const succ = document.getElementById('success1');
+  const q2 = document.getElementById('quiz2');
+
+  function moveNo(){
+    no.classList.add('running');
+    const rect = quiz.getBoundingClientRect();
+    const nx = Math.random()*(rect.width-90);
+    const ny = Math.random()*(rect.height-50);
+    no.style.left = nx+'px';
+    no.style.top = ny+'px';
+  }
+  no.addEventListener('pointerover', moveNo);
+  no.addEventListener('pointerdown', moveNo);
+  no.addEventListener('click', e=> e.preventDefault());
+
+  yes.addEventListener('click', ()=>{
+    succ.classList.add('show');
+    shootConfettiBurst();
+    setTimeout(()=> { q2.classList.add('show'); }, 600);
+  });
+})();
+
+/* Quiz 2: Birthday quiz */
+(function(){
+  const q2 = document.getElementById('quiz2');
+  const cards = Array.from(q2.querySelectorAll('.qcard'));
+  const next = document.getElementById('nextQ');
+  const finish = document.getElementById('finishQ');
+  const scoreBox = document.getElementById('scoreBox');
+  let step=0, score=0;
+
+  function showStep(i){
+    cards.forEach((c,idx)=> c.style.display = idx===i ? 'block' : 'none');
+    next.style.display = (i<cards.length-1) ? 'inline-block' : 'none';
+    finish.style.display = (i===cards.length-1) ? 'inline-block' : 'none';
+  }
+  function getValue(i){
+    const name='q'+i;
+    const sel = q2.querySelector('input[name="'+name+'"]:checked');
+    return sel ? sel.value : null;
+  }
+  showStep(step);
+
+  next.addEventListener('click', ()=>{
+    const val = getValue(step);
+    if(!val) { scoreBox.textContent = 'Please pick an option 😊'; return; }
+    if(val==='c' || val==='b') score++;
+    step++; showStep(step); scoreBox.textContent='';
+  });
+
+  finish.addEventListener('click', ()=>{
+    const val = getValue(step);
+    if(!val) { scoreBox.textContent = 'Pick one more and finish! 🎉'; return; }
+    if(val==='c' || val==='b') score++;
+    scoreBox.textContent = 'Score: '+score+'/'+cards.length+' — perfect for a birthday star! 💫';
+    shootConfettiBurst();
+    setTimeout(()=>{
+      const ss = document.getElementById('slideshow');
+      ss.classList.add('show');   // enables pointer-events:auto
+      // Fully hide quizzes so they don't intercept
+      const q1 = document.getElementById('quiz1');
+      const q2c = document.getElementById('quiz2');
+      q1.style.display = 'none'; q2c.style.display = 'none';
+      q1.setAttribute('inert',''); q2c.setAttribute('inert','');
+      q1.setAttribute('aria-hidden','true'); q2c.setAttribute('aria-hidden','true');
+    }, 700);
+  });
+})();
+
+/* Typewriter */
+(function(){
+  const el = document.getElementById('message');
+  const lines = [
+    "Happy Birthday, Kuku! 💗",
+    "Aaj tumhari khushi sabse important hai.",
+    "Har yaad me thoda sa jadoo hai.",
+    "Chalo, journey dekhte hain..."
+  ];
+  const span = s => `<span>${s}</span>`;
+  const seq = lines.map(span);
+  const speed=34, hold=1400;
+  let iLine=0, iChar=0;
+  function typeLine(){
+    if(iLine>=seq.length) return;
+    const text = lines[iLine];
+    const visible = text.slice(0,iChar);
+    el.innerHTML = `<span>${visible}</span>`;
+    if(iChar<text.length){ iChar++; setTimeout(typeLine, speed); }
+    else { iLine++; iChar=0; setTimeout(typeLine, hold); }
+  } typeLine();
+})();
+
+/* Slideshow */
+(function(){
+  const slides = Array.from(document.querySelectorAll('#slideshow .slide'));
+  const prevBtn = document.querySelector('#slideshow .prev');
+  const nextBtn = document.querySelector('#slideshow .next');
+  let idx=0, timer=null, AUTO=4200;
+
+  function show(i){
+    slides[idx].classList.remove('active');
+    idx=(i+slides.length)%slides.length;
+    slides[idx].classList.add('active');
+  }
+  function next(){ show(idx+1); pauseAuto(); }
+  function prev(){ show(idx-1); pauseAuto(); }
+
+  function startAuto(){ stopAuto(); timer=setInterval(()=>show(idx+1), AUTO); }
+  function stopAuto(){ if(timer){ clearInterval(timer); timer=null; } }
+  function pauseAuto(){ stopAuto(); startAuto(); }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+  startAuto();
+})();
+
+/* Audio toggle (gesture-based) */
+(function(){
+  const audio = document.getElementById('myAudio');
+  const btn = document.getElementById('audioBtn');
+  const hint = document.getElementById('tapHint');
+  let playing = false;
+
+  function updateUI(){
+    btn.textContent = playing ? 'Pause music' : 'Play music';
+    btn.setAttribute('aria-pressed', String(playing));
+    hint.style.display = playing ? 'none' : 'inline-block';
+  }
+
+  btn.addEventListener('click', async ()=>{
+    try{
+      if(!playing){
+        await audio.play();
+        playing = true;
+      }else{
+        audio.pause();
+        playing = false;
+      }
+    }catch(e){
+      playing = false;
+      console.warn('Playback blocked until user gesture', e);
+    }finally{
+      updateUI();
+    }
+  }, {passive:true});
+
+  audio.muted = false;
+  audio.loop = true;
+  updateUI();
+})();
+</script>
+</body>
+</html>
