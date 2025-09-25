@@ -131,9 +131,7 @@
         <div class="note">
           <strong>Personal message:</strong>
           <p id="personalNote">
-            "ab main zyada saf sabdo main khu to YE FAGUNAIYA TU HMAR JAAN HAIN REEE"
-            "baki to dur hu tuje sirf kiss he de skta hu😘😘😘😘❤️🧿"
-            
+            "Happiest birthDay my jaanu janeman this day is so special ab main zyada sabdo main to ky khu but my feelings for you is very genuine and you know how much ILove you saf sabdo main khu to YE FAGUNAIYA TU HMAR JAAN HAIN REEE baki to dur hu tuje sirf kiss he de skta hu😘😘😘😘❤️🧿"
           </p>
         </div>
         <div id="message" class="typewriter"></div>
@@ -259,20 +257,18 @@
     }, 500);
   }
 
-  yes.addEventListener('click', openGallery, {passive:true});
-  yes.addEventListener('pointerup', openGallery, {passive:true});
+  yes.addEventListener('click', openGallery);
+  yes.addEventListener('pointerup', openGallery);
 })();
 
-/* Typewriter (unchanged) */
+/* Typewriter: fixed array (removed invalid token) */
 (function(){
   const el = document.getElementById('message');
   const lines = [
-    "Aankho ki chamak palko ki shan ho tum", 
+    "Aankho ki chamak palko ki shan ho tum",
     "Chehre hi hasi lamho ki muskan ho tum",
-    "Dhadakta hai dil bas tumhari arzu mai", 
-    "Fir kaise na kahu, Meri jaan ho tum",
-
-@thel creatorr
+    "Dhadakta hai dil bas tumhari arzu mai",
+    "Fir kaise na kahu, Meri jaan ho tum"
   ];
   const speed=34, hold=1400;
   let iLine=0, iChar=0;
@@ -305,12 +301,12 @@
   function stopAuto(){ if(timer){ clearInterval(timer); timer=null; } }
   function pauseAuto(){ stopAuto(); startAuto(); }
 
-  prevBtn.addEventListener('click', prev, {passive:true});
-  nextBtn.addEventListener('click', next, {passive:true});
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
   startAuto();
 })();
 
-/* Audio toggle (unchanged) */
+/* Audio toggle: robust user-gesture play handling */
 (function(){
   const audio = document.getElementById('myAudio');
   const btn = document.getElementById('audioBtn');
@@ -323,23 +319,43 @@
     hint.style.display = playing ? 'none' : 'inline-block';
   }
 
+  async function safePlay(){
+    // Play must be in direct user gesture; catch promise rejections from autoplay policies
+    const p = audio.play();
+    if (p && typeof p.then === 'function') {
+      try {
+        await p;
+        playing = true;
+      } catch (e) {
+        // If rejected, ensure paused state and show hint to tap again
+        audio.pause();
+        playing = false;
+        console.warn('Playback blocked; needs a direct tap or device policy allows only after gesture', e);
+      }
+    } else {
+      // Older engines: assume started
+      playing = true;
+    }
+    updateUI();
+  }
+
   btn.addEventListener('click', async ()=>{
     try{
       if(!playing){
-        await audio.play();
-        playing = true;
-      }else{
+        await safePlay();
+      } else {
         audio.pause();
         playing = false;
+        updateUI();
       }
     }catch(e){
+      // Final fallback
       playing = false;
-      console.warn('Playback blocked until user gesture', e);
-    }finally{
       updateUI();
     }
-  }, {passive:true});
+  });
 
+  // Ensure correct defaults
   audio.muted = false;
   audio.loop = true;
   updateUI();
